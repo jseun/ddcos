@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. /usr/share/initramfs-tools/scripts/functions
+
+panic()
+{
+	printf "\n\n%s: %s\n\n" "Panic" "$@"
+	PS1="(build) " /bin/bash --norc
+	exit 1
+}

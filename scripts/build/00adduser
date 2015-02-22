@@ -1,0 +1,42 @@
+#!/bin/sh
+
+PREREQ=""
+
+prereqs()
+{
+        echo "$PREREQ"
+}
+
+case $1 in
+prereqs)
+        prereqs
+        exit 0
+        ;;
+esac
+
+. /tmp/scripts/functions
+
+log_begin_msg "Creating default user and password"
+
+[ -z "${DEFAULT_USER}" ] && DEFAULT_USER="docker"
+while [ -z "${PASSWORD}" ]; do
+  PASSWORD=$(whiptail \
+    --passwordbox "Please enter a password for user \"${DEFAULT_USER}\"" \
+    8 78 --title "Enter a password" 3>&1 1>&2 2>&3) || \
+    panic "User cancelled the build process"
+  [ -z "${PASSWORD}" ] && continue
+  CONFIRM=$(whiptail \
+    --passwordbox "Please enter the password again" \
+    8 78 --title "Confirm password" 3>&1 1>&2 2>&3) || \
+    panic "User cancelled the build process"
+  if [ "${PASSWORD}" != "${CONFIRM}" ]; then
+    unset PASSWORD
+    whiptail --title "Password mismatch" \
+      --msgbox "The password confirmation failed.  Please try again." 8 78
+  fi
+done
+
+useradd --comment ${DEFAULT_USER} -s /bin/bash -g staff -mN ${DEFAULT_USER}
+echo "${DEFAULT_USER}:${PASSWORD}" | chpasswd
+
+log_end_msg
