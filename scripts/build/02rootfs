@@ -1,0 +1,23 @@
+#!/bin/bash
+
+ROOTFS="/tmp/rootfs"; mkdir -p $ROOTFS
+{
+  DIRS=($(find / -type d -print 2>/dev/null | \
+    egrep -v "^(/proc|/dev|/sys|/tmp)" | sort))
+  n=${#DIRS[*]}; i=0
+  for dir in "${DIRS[@]:1}"; do
+    destdir=${ROOTFS}${dir}
+    PCT=$(( 100*(++i)/n ))
+cat <<EOF
+XXX
+$PCT
+Copying directory ${dir}...
+XXX
+EOF
+    [ -d $destdir ] || mkdir $destdir
+    find ${dir} -maxdepth 1 -type f -exec cp {} $destdir \;
+  done
+} | whiptail --title "Copying root filesystem" \
+  --gauge "Calculating..." 10 78 0
+
+(cd $ROOTFS; mkdir proc dev sys tmp)
