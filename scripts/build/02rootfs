@@ -1,13 +1,18 @@
 #!/bin/bash
 
+DESC="Copying root filesystem"
 ROOTFS="/tmp/rootfs"; mkdir -p $ROOTFS
+
+source /tmp/scripts/functions
+log_begin_msg "${DESC}"
+
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
-    egrep -v "^(/proc|/dev|/sys|/tmp)" | sort))
+    egrep -v "^(/proc|/dev|/sys|/tmp|/boot)" | sort))
   n=${#DIRS[*]}; i=0
   for dir in "${DIRS[@]:1}"; do
     destdir=${ROOTFS}${dir}
-    PCT=$(( 100*(++i)/n ))
+    PCT=$(( 99*(++i)/n ))
 cat <<EOF
 XXX
 $PCT
@@ -15,9 +20,10 @@ Copying directory ${dir}...
 XXX
 EOF
     [ -d $destdir ] || mkdir $destdir
-    find ${dir} -maxdepth 1 -type f -exec cp {} $destdir \;
+    cp -d ${dir}/* $destdir 2>/dev/null
   done
-} | whiptail --title "Copying root filesystem" \
+  (cd $ROOTFS; mkdir proc dev sys tmp boot)
+} | whiptail --title "${DESC}" \
   --gauge "Calculating..." 10 78 0
 
-(cd $ROOTFS; mkdir proc dev sys tmp)
+log_end_msg

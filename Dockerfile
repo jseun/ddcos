@@ -17,20 +17,21 @@ apt-get update \
 DEBIAN_FRONTEND=noninteractive apt-get install -qqy \
     whiptail \
 && \
-`### Bundle bootstrap packages ###` \
-scripts/bundle.sh "bootstrap" \
+`### Bundle boot packages ###` \
+scripts/bundle.sh "boot" \
     live-boot \
     linux-image-amd64 \
+    mdadm \
 && \
-`### Bundle installer packages ###` \
-scripts/bundle.sh "installer" \
-    grub2 \
+`### Bundle iso packages ###` \
+scripts/bundle.sh "iso" \
+    syslinux \
+    squashfs-tools \
     xorriso \
 && \
-`### Bundle core OS packages ###` \
+`### Bundle core packages ###` \
 scripts/bundle.sh "core" \
-    btrfs-tools \
-    mdadm \
+    grub2 \
     apparmor \
     iptables \
     ssh \

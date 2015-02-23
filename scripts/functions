@@ -9,7 +9,7 @@ panic()
 
 log_begin_msg()
 {
-	echo "$@"
+	echo -n "${@}... "
 }
 
 log_end_msg()

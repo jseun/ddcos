@@ -1,0 +1,32 @@
+#!/bin/bash
+
+DESC="Installing iso bundle"
+PKGDIR="/tmp/bundle/iso"
+
+source /tmp/scripts/functions
+log_begin_msg "${DESC}"
+
+{
+  PKGS=(${PKGDIR}/*)
+  n=${#PKGS[*]}; i=0
+  for pkg in "${PKGS[@]}"; do
+    PCT=$(( 90*(++i)/n ))
+cat <<EOF
+XXX
+$PCT
+Unpacking $(basename ${pkg} .deb)...
+XXX
+EOF
+    dpkg --unpack ${pkg}
+  done
+cat <<EOF
+XXX
+$PCT
+Configuring packages...
+XXX
+EOF
+  dpkg --configure -a >/dev/null 2>&1
+} | whiptail --title "${DESC}" \
+  --gauge "Calculating..." 10 78 0
+
+log_end_msg
