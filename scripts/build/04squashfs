@@ -1,17 +1,17 @@
 #!/bin/bash
 
 DESC="Squashing root filesystem"
-ROOTFS=/tmp/rootfs
-OUTFILE=/tmp/iso/live/filesystem.squashfs
 
-source /tmp/scripts/functions
+source /scripts/functions
+
 log_begin_msg "${DESC}"
+[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
+echo ${ROOTFS_SQUASH_FILE
+exit 0
 
 {
   DIRS=(${ROOTFS}/*/)
   n=${#DIRS[*]}; i=0
-  outdir=$(dirname $OUTFILE)
-  [ -d $outdir ] || mkdir -p $outdir
   for dir in "${DIRS[@]}"; do
     PCT=$(( 100*(++i)/n ))
 cat <<EOF
@@ -20,9 +20,10 @@ $PCT
 Processing ${dir}...
 XXX
 EOF
-    mksquashfs ${dir} ${OUTFILE} >/dev/null 2>&1
+    mksquashfs ${dir} ${ROOTFS_SQUASH_FILE} #>/dev/null 2>&1
+    [ $? -ne 0 ] && abort "mksquashfs failed"
   done
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." 10 78 0
 
-log_end_msg
+log_end_msg "done"

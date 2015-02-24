@@ -1,15 +1,24 @@
 #!/bin/bash
 
-source /tmp/scripts/functions
-
-log_begin_msg "Creating default user and password"
+DESC="Creating default user and password"
 
 [ -z "${DEFAULT_USER}" ] && DEFAULT_USER="docker"
+
+is_cached()
+{
+  [ -d ${ROOTFS} ] && chroot ${ROOTFS} id ${DEFAULT_USER} >/dev/null 2>&1
+}
+
+source /scripts/functions
+
+log_begin_msg "$DESC"
+is_cached && log_end_msg "cached"
+
 while [ -z "${PASSWORD}" ]; do
   PASSWORD=$(whiptail \
     --passwordbox "Please enter a password for user \"${DEFAULT_USER}\"" \
     8 78 --title "Enter a password" 3>&1 1>&2 2>&3) || \
-    panic "User cancelled the build process"
+    abort "User cancelled password form"
   [ -z "${PASSWORD}" ] && continue
   CONFIRM=$(whiptail \
     --passwordbox "Please enter the password again" \
@@ -25,4 +34,4 @@ done
 useradd --comment ${DEFAULT_USER} -s /bin/bash -g staff -mN ${DEFAULT_USER}
 echo "${DEFAULT_USER}:${PASSWORD}" | chpasswd
 
-log_end_msg
+log_end_msg "done"

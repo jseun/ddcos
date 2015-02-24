@@ -1,15 +1,18 @@
 #!/bin/bash
 
 DESC="Copying root filesystem"
-ROOTFS="/tmp/rootfs"; mkdir -p $ROOTFS
 
-source /tmp/scripts/functions
+source /scripts/functions
+
 log_begin_msg "${DESC}"
+[ -d ${ROOTFS}/bin ] && log_end_msg "cached"
 
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
-    egrep -v "^(/proc|/dev|/sys|/tmp|/boot)" | sort))
+    egrep -v "^(/proc|/dev|/sys|/tmp|/boot|/scripts|/data|/bundle)" | \
+    egrep -v "^(/usr/share/man|/usr/share/locale|/usr/share/zoneinfo)" | sort))
   n=${#DIRS[*]}; i=0
+  [ -d $ROOTFS ] || mkdir -p $ROOTFS
   for dir in "${DIRS[@]:1}"; do
     destdir=${ROOTFS}${dir}
     PCT=$(( 99*(++i)/n ))
@@ -26,4 +29,4 @@ EOF
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." 10 78 0
 
-log_end_msg
+log_end_msg "done"

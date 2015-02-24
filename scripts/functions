@@ -1,10 +1,8 @@
 #!/bin/bash
 
-panic()
+abort()
 {
-	printf "\n\n%s: %s\n\n" "Panic" "$@"
-	PS1="(build) " /bin/bash --norc
-	exit 1
+	echo "aborted"; printf "\n\n%s: %s\n\n" "Reason" "$@"; exit 1
 }
 
 log_begin_msg()
@@ -14,7 +12,7 @@ log_begin_msg()
 
 log_end_msg()
 {
-	echo "done"
+	echo "${@}"; exit 0
 }
 
 run_scripts()
@@ -25,6 +23,7 @@ run_scripts()
 	for script in "${scripts[@]}"; do
 		$script && ec=$? || ec=$?
 		if [ "$ec" -ne 0 ]; then
+			PS1="(build) " /bin/bash --norc
 			echo "E: $script failed with return $ec."
 			exit $ec
 		fi

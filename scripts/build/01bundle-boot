@@ -1,13 +1,14 @@
 #!/bin/bash
 
 DESC="Installing boot bundle"
-PKGDIR="/tmp/bundle/boot"
 
-source /tmp/scripts/functions
+source /scripts/functions
+
 log_begin_msg "${DESC}"
+[ -d "${ROOTFS}/boot/" ] && log_end_msg "cached"
 
 {
-  PKGS=(${PKGDIR}/*)
+  PKGS=(${PKGDIR}/boot/*)
   n=${#PKGS[*]}; i=0
   for pkg in "${PKGS[@]}"; do
     PCT=$(( 90*(++i)/n ))
@@ -29,4 +30,4 @@ EOF
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." 10 78 0
 
-log_end_msg
+log_end_msg "done"
