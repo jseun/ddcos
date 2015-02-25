@@ -17,17 +17,18 @@ is_cached && log_end_msg "cached"
 while [ -z "${PASSWORD}" ]; do
   PASSWORD=$(whiptail \
     --passwordbox "Please enter a password for user \"${DEFAULT_USER}\"" \
-    8 78 --title "Enter a password" 3>&1 1>&2 2>&3) || \
+    $LINES $COLUMNS --title "Enter a password" 3>&1 1>&2 2>&3) || \
     abort "User cancelled password form"
   [ -z "${PASSWORD}" ] && continue
   CONFIRM=$(whiptail \
     --passwordbox "Please enter the password again" \
-    8 78 --title "Confirm password" 3>&1 1>&2 2>&3) || \
+    $LINES $COLUMNS --title "Confirm password" 3>&1 1>&2 2>&3) || \
     panic "User cancelled the build process"
   if [ "${PASSWORD}" != "${CONFIRM}" ]; then
     unset PASSWORD
     whiptail --title "Password mismatch" \
-      --msgbox "The password confirmation failed.  Please try again." 8 78
+      --msgbox "The password confirmation failed.  Please try again." \
+      $LINES $COLUMNS
   fi
 done
 

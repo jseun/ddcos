@@ -6,21 +6,16 @@ source /scripts/functions
 
 log_begin_msg "${DESC}"
 
-mkdir -p ${ISODIR}/{boot,install,isolinux}
-cp /boot/vmlinuz-* ${ISODIR}/boot
-cp /boot/initrd.img-* ${ISODIR}/boot
-cp /usr/lib/syslinux/isolinux.bin ${ISODIR}/isolinux
-{
-  {
-    xorriso	-publisher "github.com/jseun"			\
-		-as mkisofs -l -J -R				\
-		-V "${DISTVER}"					\
-		-b isolinux/isolinux.bin			\
-		-c isolinux/boot.cat				\
-		-isohybrid-mbr /usr/lib/syslinux/isohdpfx.bin	\
-		-o $ISOFILE $ISODIR
-  }
-} | whiptail --title "${DESC}" \
-  --gauge "Calculating..." 10 78 0
+mkdir -p ${ISODIR}/isolinux
+cp /usr/lib/ISOLINUX/isolinux.bin ${ISODIR}/isolinux
+cp /usr/lib/syslinux/modules/efi64/menu.c32 ${ISODIR}/isolinux
+cp -ax /tmp/bundle ${ISODIR}
+xorriso	-publisher "github.com/jseun"			\
+	-as mkisofs -l -J -R				\
+	-V "${DISTVER}"					\
+	-b isolinux/isolinux.bin			\
+	-c isolinux/boot.cat				\
+	-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin	\
+	-o $ISOFILE $ISODIR
 
 log_end_msg "done"

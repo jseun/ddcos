@@ -27,6 +27,6 @@ XXX
 EOF
   dpkg --configure -a >/dev/null 2>&1
 } | whiptail --title "${DESC}" \
-  --gauge "Calculating..." 10 78 0
+  --gauge "Calculating..." $LINES $COLUMNS 0
 
 log_end_msg "done"

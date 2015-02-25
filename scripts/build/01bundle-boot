@@ -5,7 +5,7 @@ DESC="Installing boot bundle"
 source /scripts/functions
 
 log_begin_msg "${DESC}"
-[ -d "${ROOTFS}/boot/" ] && log_end_msg "cached"
+[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
   PKGS=(${PKGDIR}/boot/*)
@@ -27,7 +27,10 @@ Configuring packages...
 XXX
 EOF
   dpkg --configure -a >/dev/null 2>&1
+  mkdir -p ${ISODIR}/boot
+  cp /boot/vmlinuz-* ${ISODIR}/boot
+  cp /boot/initrd.img-* ${ISODIR}/boot
 } | whiptail --title "${DESC}" \
-  --gauge "Calculating..." 10 78 0
+  --gauge "Calculating..." $LINES $COLUMNS 0
 
 log_end_msg "done"

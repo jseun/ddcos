@@ -6,8 +6,6 @@ source /scripts/functions
 
 log_begin_msg "${DESC}"
 [ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
-echo ${ROOTFS_SQUASH_FILE
-exit 0
 
 {
   DIRS=(${ROOTFS}/*/)
@@ -20,10 +18,9 @@ $PCT
 Processing ${dir}...
 XXX
 EOF
-    mksquashfs ${dir} ${ROOTFS_SQUASH_FILE} #>/dev/null 2>&1
-    [ $? -ne 0 ] && abort "mksquashfs failed"
+    mksquashfs ${dir} ${ROOTFS_SQUASH_FILE} >/dev/null 2>&1
   done
 } | whiptail --title "${DESC}" \
-  --gauge "Calculating..." 10 78 0
+  --gauge "Calculating..." $LINES $COLUMNS 0
 
 log_end_msg "done"

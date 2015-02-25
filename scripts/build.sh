@@ -1,12 +1,18 @@
 #!/bin/bash
 
-export \
-ISODIR="/tmp/iso" \
-PKGDIR="/tmp/bundle" \
-DATADIR="/data" \
-ISOFILE="${DATADIR}/ddcos.iso" \
-ROOTFS="/tmp/rootfs" \
+DISTVER="ddcos-${VERSION}"
+
+ISODIR="/tmp/iso"
+PKGDIR="/tmp/bundle"
+DATADIR="/data"
+ISOFILE="${DATADIR}/ddcos.iso"
+ROOTFS="/tmp/rootfs"
 ROOTFS_SQUASH_FILE="${ISODIR}/live/squashfs.filesystem"
+
+export ISODIR PKGDIR DATADIR ISOFILE ROOTFS ROOTFS_SQUASH_FILE
+
+LINES=8; COLUMNS=78
+export LINES COLUMNS
 
 for dir in $ISODIR $PKGDIR $DATADIR \
   $ISODIR/boot $ISODIR/live $ISODIR/install \

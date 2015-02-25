@@ -5,7 +5,7 @@ DESC="Copying root filesystem"
 source /scripts/functions
 
 log_begin_msg "${DESC}"
-[ -d ${ROOTFS}/bin ] && log_end_msg "cached"
+[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
@@ -27,6 +27,6 @@ EOF
   done
   (cd $ROOTFS; mkdir proc dev sys tmp boot)
 } | whiptail --title "${DESC}" \
-  --gauge "Calculating..." 10 78 0
+  --gauge "Calculating..." $LINES $COLUMNS 0
 
 log_end_msg "done"
