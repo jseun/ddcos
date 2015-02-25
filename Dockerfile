@@ -29,15 +29,14 @@ scripts/bundle.sh "boot" \
     linux-image-amd64 \
     mdadm \
 && \
-`### Bundle iso packages ###` \
-scripts/bundle.sh "iso" \
-    isolinux \
+`### Bundle installer packages ###` \
+scripts/bundle.sh "install" \
+    grub2 \
     squashfs-tools \
     xorriso \
 && \
 `### Bundle core packages ###` \
 scripts/bundle.sh "core" \
-    grub2 \
     lxc-docker \
     apparmor \
     iptables \
@@ -49,9 +48,10 @@ apt-get clean; rm -rf /var/lib/apt/lists/*"; \
 rm -rf /usr/share/man; rm -rf /usr/share/zoneinfo; \
 rm -rf /usr/share/locale; rm -rf /usr/share/doc
 
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["/scripts/build.sh"]
-VOLUME ["/tmp", "/data"]
-COPY scripts /scripts
+ENTRYPOINT ["/bin/dash", "-c"]
+CMD ["/tmp/scripts/build.sh"]
+VOLUME ["/data"]
+COPY scripts /tmp/scripts
+COPY isolinux /tmp/isolinux
 
 ENV VERSION "8.0-1.0-dev"

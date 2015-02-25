@@ -2,14 +2,14 @@
 
 DESC="Copying root filesystem"
 
-source /scripts/functions
+source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
 [ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
-    egrep -v "^(/proc|/dev|/sys|/tmp|/boot|/scripts|/data|/bundle)" | \
+    egrep -v "^(/proc|/dev|/sys|/tmp|/boot|/data)" | \
     egrep -v "^(/usr/share/man|/usr/share/locale|/usr/share/zoneinfo)" | sort))
   n=${#DIRS[*]}; i=0
   [ -d $ROOTFS ] || mkdir -p $ROOTFS

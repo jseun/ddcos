@@ -1,15 +1,16 @@
 #!/bin/bash
 
 DISTVER="ddcos-${VERSION}"
-
-ISODIR="/tmp/iso"
-PKGDIR="/tmp/bundle"
+SHDIR="/tmp/scripts"
 DATADIR="/data"
+ISODIR="${DATADIR}/iso"
+PKGDIR="${DATADIR}/bundle"
 ISOFILE="${DATADIR}/ddcos.iso"
-ROOTFS="/tmp/rootfs"
+ROOTFS="${DATADIR}/rootfs"
 ROOTFS_SQUASH_FILE="${ISODIR}/live/squashfs.filesystem"
 
-export ISODIR PKGDIR DATADIR ISOFILE ROOTFS ROOTFS_SQUASH_FILE
+export ISODIR PKGDIR DATADIR ISOFILE ROOTFS ROOTFS_SQUASH_FILE \
+SHDIR DISTVER
 
 LINES=8; COLUMNS=78
 export LINES COLUMNS
@@ -20,9 +21,9 @@ for dir in $ISODIR $PKGDIR $DATADIR \
   [ -d $dir ] || mkdir -p $dir
 done
 
-for dir in /bundle/*/; do
+for dir in /tmp/bundle/*/; do
   [ -d ${PKGDIR}/$(basename $dir) ] || mv $dir $PKGDIR
 done
 
-source /scripts/functions
-run_scripts /scripts/build
+source ${SHDIR}/functions
+run_scripts ${SHDIR}/build

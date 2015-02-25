@@ -2,7 +2,7 @@
 
 DESC="Installing iso bundle"
 
-source /scripts/functions
+source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
 

@@ -2,7 +2,7 @@
 
 DESC="Squashing root filesystem"
 
-source /scripts/functions
+source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
 [ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"

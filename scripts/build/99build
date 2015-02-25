@@ -2,20 +2,18 @@
 
 DESC="Building ISO"
 
-source /scripts/functions
+source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
 
-mkdir -p ${ISODIR}/isolinux
-cp /usr/lib/ISOLINUX/isolinux.bin ${ISODIR}/isolinux
-cp /usr/lib/syslinux/modules/efi64/menu.c32 ${ISODIR}/isolinux
 cp -ax /tmp/bundle ${ISODIR}
-xorriso	-publisher "github.com/jseun"			\
-	-as mkisofs -l -J -R				\
-	-V "${DISTVER}"					\
-	-b isolinux/isolinux.bin			\
-	-c isolinux/boot.cat				\
-	-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin	\
+xorriso	-publisher "github.com/jseun"				\
+	-as mkisofs -l -J -R					\
+	-V "${DISTVER}"						\
+	-no-emul-boot -boot-load-size 4 -boot-info-table	\
+	-b isolinux/isolinux.bin				\
+	-c isolinux/boot.cat					\
+	-isohybrid-mbr ${ISODIR}/isolinux/isohdpfx.bin		\
 	-o $ISOFILE $ISODIR
 
 log_end_msg "done"

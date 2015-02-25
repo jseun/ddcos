@@ -9,7 +9,7 @@ is_cached()
   [ -d ${ROOTFS} ] && chroot ${ROOTFS} id ${DEFAULT_USER} >/dev/null 2>&1
 }
 
-source /scripts/functions
+source ${SHDIR}/functions
 
 log_begin_msg "$DESC"
 is_cached && log_end_msg "cached"
