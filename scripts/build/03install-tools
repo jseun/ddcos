@@ -1,14 +1,13 @@
 #!/bin/bash
 
-DESC="Installing boot bundle"
+DESC="Installing bundle: install"
 
 source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
-[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
-  PKGS=(${PKGDIR}/boot/*)
+  PKGS=($(ls ${PKGDIR}/install/* | egrep -v '^grub'))
   n=${#PKGS[*]}; i=0
   for pkg in "${PKGS[@]}"; do
     PCT=$(( 90*(++i)/n ))
@@ -27,9 +26,6 @@ Configuring packages...
 XXX
 EOF
   dpkg --configure -a >/dev/null 2>&1
-  mkdir -p ${ISODIR}/boot
-  cp /boot/vmlinuz-* ${ISODIR}/boot
-  cp /boot/initrd.img-* ${ISODIR}/boot
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." $LINES $COLUMNS 0
 

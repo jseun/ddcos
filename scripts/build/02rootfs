@@ -10,7 +10,7 @@ log_begin_msg "${DESC}"
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
     egrep -v "^(/proc|/dev|/sys|/tmp|/boot|/data)" | \
-    egrep -v "^(/usr/share/man|/usr/share/locale|/usr/share/zoneinfo)" | sort))
+    egrep -v "^(/usr/share/man|/usr/share/locale)" | sort))
   n=${#DIRS[*]}; i=0
   [ -d $ROOTFS ] || mkdir -p $ROOTFS
   for dir in "${DIRS[@]:1}"; do
@@ -26,6 +26,7 @@ EOF
     cp -d ${dir}/* $destdir 2>/dev/null
   done
   (cd $ROOTFS; mkdir proc dev sys tmp boot)
+  cp -ax /tmp/scripts /tmp
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." $LINES $COLUMNS 0
 

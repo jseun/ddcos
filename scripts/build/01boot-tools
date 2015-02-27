@@ -1,13 +1,14 @@
 #!/bin/bash
 
-DESC="Installing iso bundle"
+DESC="Installing bundle: boot"
 
 source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
+[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
-  PKGS=(${PKGDIR}/iso/*)
+  PKGS=(/tmp/bundle/boot/*)
   n=${#PKGS[*]}; i=0
   for pkg in "${PKGS[@]}"; do
     PCT=$(( 90*(++i)/n ))
@@ -26,6 +27,8 @@ Configuring packages...
 XXX
 EOF
   dpkg --configure -a >/dev/null 2>&1
+  cp /boot/vmlinuz-* ${ISODIR}/live
+  cp /boot/initrd.img-* ${ISODIR}/live
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." $LINES $COLUMNS 0
 
