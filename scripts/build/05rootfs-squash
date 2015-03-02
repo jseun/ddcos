@@ -7,6 +7,8 @@ source ${SHDIR}/functions
 log_begin_msg "${DESC}"
 [ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
+apt-get install -qqy squashfs-tools
+
 {
   DIRS=(${ROOTFS}/*/)
   n=${#DIRS[*]}; i=0

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DESC="Updating local APT repository"
+
+source ${SHDIR}/functions
+
+log_begin_msg "${DESC}"
+
+apt-get install -qqy dpkg-dev
+
+mkdir -p /lib/live/mount/medium
+ln -sf ${PKGDIR} /lib/live/mount/medium/archives
+(cd ${PKGDIR}; dpkg-scanpackages . /dev/null | \
+  gzip -c9 > Packages.gz)
+apt-get update
+
+log_end_msg "done"

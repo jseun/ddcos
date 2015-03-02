@@ -10,7 +10,8 @@ log_begin_msg "${DESC}"
 {
   DIRS=($(find / -type d -print 2>/dev/null | \
     egrep -v "^(/proc|/dev|/sys|/tmp|/boot|/data)" | \
-    egrep -v "^(/usr/share/man|/usr/share/locale)" | sort))
+    egrep -v "^(/usr/share/man|/usr/share/locale)" | \
+    egrep -v "^/var/lib/apt/lists/" | sort))
   n=${#DIRS[*]}; i=0
   [ -d $ROOTFS ] || mkdir -p $ROOTFS
   for dir in "${DIRS[@]:1}"; do

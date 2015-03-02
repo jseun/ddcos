@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DESC="Installing bundle: boot"
+DESC="Installing live packages"
 
 source ${SHDIR}/functions
 
@@ -8,7 +8,7 @@ log_begin_msg "${DESC}"
 [ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
-  PKGS=(/tmp/bundle/boot/*)
+  PKGS=(/tmp/live/*)
   n=${#PKGS[*]}; i=0
   for pkg in "${PKGS[@]}"; do
     PCT=$(( 90*(++i)/n ))
@@ -18,7 +18,7 @@ $PCT
 Unpacking $(basename ${pkg} .deb)...
 XXX
 EOF
-    dpkg --unpack ${pkg}
+    dpkg --unpack ${pkg} >/dev/null 2>&1
   done
 cat <<EOF
 XXX

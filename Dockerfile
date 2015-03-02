@@ -4,13 +4,8 @@
 FROM debian:8.0
 MAINTAINER Samuel Jean "jamael.seun@gmail.com"
 
-COPY scripts/bundle.sh /tmp/scripts/
-RUN /bin/dash -xc "cd /tmp; \
+RUN /bin/sh -xc "\
 `### Update repositories ###` \
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys \
-    36A1D7869245C8950F966E92D8576A8BA88D21E9 && \
-printf 'deb http://get.docker.io/ubuntu/ docker main\n' > \
-    /etc/apt/sources.list.d/docker.list && \
 printf 'APT::Install-Recommends "0";\n' > \
     /etc/apt/apt.conf.d/99no-install-recommends && \
 printf 'Acquire::Languages "none";\n' > \
@@ -23,33 +18,20 @@ echo 'debconf debconf/frontend select Noninteractive' | \
 apt-get install -qqy \
     whiptail \
 && \
-`### Bundle boot packages ###` \
-scripts/bundle.sh "boot" \
+`### Download live packages ###` \
+mkdir -p /tmp/live; (cd /tmp/live; apt-get -sy install \
     live-boot \
     live-tools \
     linux-image-amd64 \
     firmware-linux-free \
     mdadm \
-&& \
-`### Bundle installer packages ###` \
-scripts/bundle.sh "install" \
-    grub2 \
-    squashfs-tools \
-    xorriso \
-&& \
-`### Bundle core packages ###` \
-scripts/bundle.sh "core" \
-    lxc-docker \
-    apparmor \
-    iptables \
-    ssh \
-    sudo \
+| awk '/^Inst /{print \$2}' | xargs apt-get download) \
 && \
 `### Clean up ###` \
-apt-get clean; rm -rf /var/lib/apt/lists/*"; \
+apt-get clean; rm -rf /var/lib/apt/lists/*; \
 rm -rf /usr/share/man; \
 rm -rf /usr/share/locale; \
-rm -rf /usr/share/doc
+rm -rf /usr/share/doc"
 
 ENTRYPOINT ["/bin/dash", "-c"]
 CMD ["/tmp/scripts/build.sh"]

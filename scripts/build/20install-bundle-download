@@ -1,0 +1,17 @@
+#!/bin/bash
+
+NAME="install"
+DESC="Downloading bundle packages (${NAME})"
+PKGS=( \
+    grub2 \
+    xorriso \
+)
+
+source ${SHDIR}/functions
+
+log_begin_msg "${DESC}"
+
+pkgs=$(apt-get -sy install ${PKGS[@]} | awk '/^Inst /{print $2}')
+(cd ${PKGDIR}; apt-get download $pkgs)
+
+log_end_msg "done"
