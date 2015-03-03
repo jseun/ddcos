@@ -1,2 +1,3 @@
 #!/bin/sh
-exec /bin/bash </dev/console >/dev/console
+#apt-get install -qqy lxc-docker apparmor iptables ssh sudo
+exec /sbin/init
