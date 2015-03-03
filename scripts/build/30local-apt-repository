@@ -6,12 +6,11 @@ source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
 
-apt-get install -qqy dpkg-dev
+apt-get install -qqy dpkg-dev >/dev/null 2>&1
 
-mkdir -p /lib/live/mount/medium
-ln -sf ${PKGDIR} /lib/live/mount/medium/archives
-(cd ${PKGDIR}; dpkg-scanpackages . /dev/null | \
-  gzip -c9 > Packages.gz)
+(cd ${APTDIR}; dpkg-scanpackages dists/local/main/binary-amd64 | \
+  gzip -c9 > dists/local/main/binary-amd64/Packages.gz)
+
 apt-get update
 
 log_end_msg "done"
