@@ -5,7 +5,6 @@ DESC="Installing live packages"
 source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
-[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
   PKGS=(/tmp/live/*)

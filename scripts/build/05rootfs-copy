@@ -5,7 +5,6 @@ DESC="Copying root filesystem"
 source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
-[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 {
   DIRS=($(find / -type d -print 2>/dev/null | \

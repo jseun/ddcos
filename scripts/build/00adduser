@@ -4,15 +4,9 @@ DESC="Creating default user and password"
 
 [ -z "${DEFAULT_USER}" ] && DEFAULT_USER="docker"
 
-is_cached()
-{
-  [ -d ${ROOTFS} ] && chroot ${ROOTFS} id ${DEFAULT_USER} >/dev/null 2>&1
-}
-
 source ${SHDIR}/functions
 
 log_begin_msg "$DESC"
-is_cached && log_end_msg "cached"
 
 while [ -z "${PASSWORD}" ]; do
   PASSWORD=$(whiptail \

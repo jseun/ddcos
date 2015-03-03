@@ -5,7 +5,6 @@ DESC="Squashing root filesystem"
 source ${SHDIR}/functions
 
 log_begin_msg "${DESC}"
-[ -e ${ROOTFS_SQUASH_FILE} ] && log_end_msg "cached"
 
 apt-get install -qqy squashfs-tools
 
@@ -20,7 +19,7 @@ $PCT
 Processing ${dir}...
 XXX
 EOF
-    mksquashfs ${dir} ${ROOTFS_SQUASH_FILE} >/dev/null 2>&1
+    mksquashfs --keep-as-directory ${dir} ${ROOTFS_SQUASH_FILE} >/dev/null 2>&1
   done
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." $LINES $COLUMNS 0
