@@ -7,6 +7,7 @@ source ${SHDIR}/functions
 log_begin_msg "${DESC}"
 
 apt-get install -qqy squashfs-tools
+rm -f ${ROOTFS_SQUASH_FILE}
 
 {
   DIRS=(${ROOTFS}/*/)
