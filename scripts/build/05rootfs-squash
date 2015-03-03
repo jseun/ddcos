@@ -19,7 +19,8 @@ $PCT
 Processing ${dir}...
 XXX
 EOF
-    mksquashfs --keep-as-directory ${dir} ${ROOTFS_SQUASH_FILE} >/dev/null 2>&1
+    mksquashfs ${dir} ${ROOTFS_SQUASH_FILE} -comp xz \
+      -keep-as-directory >/dev/null 2>&1
   done
 } | whiptail --title "${DESC}" \
   --gauge "Calculating..." $LINES $COLUMNS 0
