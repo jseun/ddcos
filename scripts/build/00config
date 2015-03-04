@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DESC="Setting up build environment"
+
+source ${SHDIR}/functions
+
+log_begin_msg "$DESC"
+
+for dir in $ISODIR $PKGDIR $DATADIR \
+  $ISODIR/live $ROOTFS; do
+  [ -d $dir ] || mkdir -p $dir
+done
+
+cp -ax /tmp/bundle ${BDLDIR}
+
+log_end_msg "done"

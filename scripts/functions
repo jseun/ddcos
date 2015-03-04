@@ -19,13 +19,13 @@ run_scripts()
 {
 	rundir=${1}
 	[ -d ${rundir} ] || return
-	scripts=(${rundir}/*)
-	for script in "${scripts[@]}"; do
-		$script && ec=$? || ec=$?
+	scripts=($(echo ${rundir}/* | sed "s@${rundir}/config@@"))
+	(. ${rundir}/config && for script in "${scripts[@]}"; do
+		$script; ec=$?
 		if [ "$ec" -ne 0 ]; then
 			PS1="(build) " /bin/bash --norc
 			echo "E: $script failed with return $ec."
 			exit $ec
 		fi
-	done
+	done)
 }

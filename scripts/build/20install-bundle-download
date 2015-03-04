@@ -2,10 +2,7 @@
 
 NAME="install"
 DESC="Downloading bundle packages (${NAME})"
-PKGS=( \
-    grub2 \
-    xorriso \
-)
+PKGS=($(cat ${BDLDIR}/${NAME}.txt))
 
 source ${SHDIR}/functions
 

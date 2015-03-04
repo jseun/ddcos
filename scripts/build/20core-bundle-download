@@ -2,13 +2,7 @@
 
 NAME="core"
 DESC="Downloading bundle packages (${NAME})"
-PKGS=( \
-    lxc-docker \
-    apparmor \
-    iptables \
-    ssh \
-    sudo \
-)
+PKGS=($(cat ${BDLDIR}/${NAME}.txt))
 
 source ${SHDIR}/functions
 

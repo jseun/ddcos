@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#DISTVER="ddcos-${VERSION}"
+BDLDIR="/tmp/bundle"
+export BLDDIR

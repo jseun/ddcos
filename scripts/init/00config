@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DESC="Setting up initial environment"
+
+source ${SHDIR}/functions
+
+log_begin_msg "$DESC"
+
+service udev start
+
+log_end_msg "done"

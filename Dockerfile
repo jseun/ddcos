@@ -33,10 +33,10 @@ rm -rf /usr/share/man; \
 rm -rf /usr/share/locale; \
 rm -rf /usr/share/doc"
 
-ENTRYPOINT ["/bin/dash", "-c"]
-CMD ["/tmp/scripts/build.sh"]
+ENTRYPOINT ["/bin/bash", "-c", "/tmp/scripts/init.sh build"]
 VOLUME ["/data"]
 COPY scripts /tmp/scripts
 COPY isolinux /tmp/isolinux
-
+COPY bundle /tmp/bundle
+ENV DATADIR /data
 ENV VERSION "8.0-1.0-dev"

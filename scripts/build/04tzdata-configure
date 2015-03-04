@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DESC="Update APT repositories"
+
+source ${SHDIR}/functions
+
+log_begin_msg "$DESC"
+
+dpkg-reconfigure tzdata
+
+log_end_msg "done"

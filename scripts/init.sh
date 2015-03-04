@@ -1,3 +1,6 @@
-#!/bin/sh
-#apt-get install -qqy lxc-docker apparmor iptables ssh sudo
-exec /sbin/init
+#!/bin/bash
+
+export SHDIR=$(dirname $0)
+source ${SHDIR}/functions
+run_scripts ${SHDIR}/${1-init}
+exec /bin/bash
