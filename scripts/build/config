@@ -1,8 +1,9 @@
 #!/bin/bash
 
 DISTVER="${DISTNAME}-${VERSION}"
-BUILDPKGS="dpkg-dev squashfs-tools"
+BUILDPKGS="dpkg-dev squashfs-tools xorriso"
 BASEPKGS="\
+  aufs-tools \
   lxc-docker \
   apparmor \
   iptables \

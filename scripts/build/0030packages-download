@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+echo 'debconf debconf/frontend select Noninteractive' | \
+    debconf-set-selections \
+
+PKGS=(${BASEPKGS})
+(cd ${PKGDIR}; apt-get -sy install ${PKGS[@]} | \
+  awk '/^Inst /{print $2}' | xargs apt-get download)
+
+log_end_msg

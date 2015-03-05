@@ -37,7 +37,4 @@ EOF
 
 apt-get update
 
-echo 'debconf debconf/frontend select Noninteractive' | \
-    debconf-set-selections \
-
 log_end_msg
