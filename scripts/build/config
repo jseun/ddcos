@@ -1,16 +1,21 @@
 #!/bin/bash
 
-DISTVER="ddcos-${VERSION}"
-BDLDIR="${DATADIR}/bundle"
-ISODIR="${DATADIR}/iso"
-APTDIR="${ISODIR}/archives"
-PKGDIR="${APTDIR}/dists/local/main/binary-amd64"
-ISOFILE="${DATADIR}/ddcos.iso"
-ROOTFS="${DATADIR}/rootfs"
-ROOTFS_SQUASH_FILE="${ISODIR}/live/filesystem.squashfs"
+DISTVER="${DISTNAME}-${VERSION}"
+BUILDPKGS="dpkg-dev squashfs-tools"
+BASEPKGS="\
+  lxc-docker \
+  apparmor \
+  iptables \
+  live-boot \
+  live-tools \
+  linux-image-amd64 \
+  firmware-linux-free \
+  mdadm \
+\
+  net-tools \
+"
+export DISTVER BUILDPKGS BASEPKGS
 
-export ISODIR APTDIR PKGDIR DATADIR ISOFILE ROOTFS ROOTFS_SQUASH_FILE \
-SHDIR DISTVER BDLDIR
-
-LINES=8; COLUMNS=78
-export LINES COLUMNS
+APTDIR="/archives"
+PKGDIR="/archives/dists/local/main/binary-amd64"
+export APTDIR PKGDIR

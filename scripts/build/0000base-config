@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+for dir in "$APTDIR $PKGDIR"; do
+  [ -d "$dir" ] || mkdir -p $dir
+done
+
+log_end_msg

@@ -2,28 +2,30 @@
 
 abort()
 {
-	echo "aborted"; printf "\n\n%s: %s\n\n" "Reason" "$@"; exit 1
+  echo "!!! Aborted"
+  printf "\n\n%s: %s\n\n" "Reason" "$@"
+  exit 1
 }
 
 log_begin_msg()
 {
-	echo -n "${@}... "
+  echo " ---> Running $0"
 }
 
 log_end_msg()
 {
-	echo "${@}"; exit 0
+  echo " <--- Exiting $0"; exit 0
 }
 
 run_scripts()
 {
-	rundir=${1}
-	[ -d ${rundir} ] || return
+	rundir=/scripts/$1
+	[ -d $rundir ] || return
 	scripts=($(echo ${rundir}/* | sed "s@${rundir}/config@@"))
 	(. ${rundir}/config && for script in "${scripts[@]}"; do
 		$script; ec=$?
 		if [ "$ec" -ne 0 ]; then
-			PS1="(build) " /bin/bash --norc
+			PS1="($1) " /bin/bash --norc
 			echo "E: $script failed with return $ec."
 			exit $ec
 		fi
