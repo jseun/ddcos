@@ -3,6 +3,7 @@
 source /scripts/functions
 log_begin_msg
 
+mkdir -p ${ISODIR}/install
 cp -v ${LIVEROOTFS}.squashfs ${ISODIR}/install/live.squashfs
 cp -v ${INSTALLROOTFS}.squashfs ${ISODIR}/live/filesystem.squashfs
 xorriso -publisher "${PUBLISHER}"                               \

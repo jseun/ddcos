@@ -13,6 +13,6 @@ for dir in $ISODIR ${ISODIR}/live; do
   [ -d "$dir" ] || mkdir -p $dir
 done
 
-echo $DISTVER > /etc/version
+echo $DISTVER > ${ROOTFS}/etc/version
 
 log_end_msg

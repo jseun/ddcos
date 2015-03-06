@@ -22,6 +22,7 @@ for lib in acl anl attr audit blkid bz2 c cap cidn com_err \
   cp -Pv /lib/${libdir}/lib${lib}.* $destlibdir
   cp -Pv /lib/${libdir}/lib${lib}-* $destlibdir
 done
+cp -Pv /lib/${libdir}/libnss_* $destlibdir
 cp /lib/${libdir}/ld-* $destlibdir
 
 destlibdir=${ROOTFS}/usr/lib/$libdir

@@ -20,8 +20,9 @@ copy_binary_to_rootfs ${ROOTFS} bash
 (cd ${ROOTFS}/bin; ln -sf bash sh)
 
 # Configuration files
-for conffile in fstab group gshadow hostname hosts localtime passwd \
-  resolv.conf shadow shells; do
+for conffile in fstab group gshadow hostname hosts ld.so.cache \
+  ld.so.conf localtime nsswitch.conf passwd protocols resolv.conf \
+  services shadow shells; do
   cp -v /etc/$conffile ${ROOTFS}/etc
 done
 
