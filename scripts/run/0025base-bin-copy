@@ -1,0 +1,27 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+for bin in true bash restartd iptables docker; do
+  locbin=$(whereis $bin | cut -f2 -d' ')
+  destdir=${ROOTFS}$(dirname $locbin)
+  [ -d $destdir ] || mkdir -p $destdir
+  cp -v $locbin $destdir
+done
+
+# For debugging
+for bin in ifconfig ping vi mount umount; do
+  locbin=$(whereis $bin | cut -f2 -d' ')
+  destdir=${ROOTFS}$(dirname $locbin)
+  [ -d $destdir ] || mkdir -p $destdir
+  cp -v $locbin $destdir
+done
+for bin in more mke2fs cfdisk modprobe lsmod ps ldd cat ls; do
+  locbin=$(whereis $bin | cut -f2 -d' ')
+  destdir=${ROOTFS}$(dirname $locbin)
+  [ -d $destdir ] || mkdir -p $destdir
+  cp -v $locbin $destdir
+done
+
+log_end_msg

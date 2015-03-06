@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+cp -v /boot/vmlinuz-* ${ISOLIVEDIR}
+cp -v /boot/initrd.img-* ${ISOLIVEDIR}
+cp -vax /lib/modules ${ROOTFS}/lib
+
+log_end_msg

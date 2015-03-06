@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+for dir in bin dev etc proc root run sbin srv sys tmp usr \
+  var var/run var/log var/lib; do
+  [ -d "${ROOTFS}/$dir" ] || mkdir -p ${ROOTFS}/$dir
+done
+
+for dir in $ISODIR $ISOLIVEDIR; do
+  [ -d "$dir" ] || mkdir -p $dir
+done
+
+log_end_msg

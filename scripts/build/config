@@ -1,22 +1,3 @@
 #!/bin/bash
 
-DISTVER="${DISTNAME}-${VERSION}"
-BUILDPKGS="dpkg-dev squashfs-tools xorriso"
-BASEPKGS="\
-  aufs-tools \
-  lxc-docker \
-  apparmor \
-  iptables \
-  live-boot \
-  live-tools \
-  linux-image-amd64 \
-  firmware-linux-free \
-  mdadm \
-\
-  net-tools \
-"
-export DISTVER BUILDPKGS BASEPKGS
-
-APTDIR="/archives"
-PKGDIR="/archives/dists/local/main/binary-amd64"
-export APTDIR PKGDIR
+source /scripts/config

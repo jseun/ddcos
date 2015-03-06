@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+(cd ${ROOTFS}/bin; ln -sf bash sh)
+(cd ${ROOTFS}/sbin; ln -sf mke2fs mkfs.ext4)
+cp -vax /etc/* ${ROOTFS}/etc
+
+log_end_msg

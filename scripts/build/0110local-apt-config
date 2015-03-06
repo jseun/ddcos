@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+(cd $APTDIR; dpkg-scanpackages dists/local/main/binary-amd64 | \
+  gzip -c9 > dists/local/main/binary-amd64/Packages.gz)
+
+rm -f /etc/apt/sources.list.d/* /var/lib/apt/lists/*
+apt-get update
+
+log_end_msg

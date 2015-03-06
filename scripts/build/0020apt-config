@@ -6,6 +6,7 @@ log_begin_msg
 cat <<EOF > /etc/apt/apt.conf.d/99ddcos-build
 APT::Install-Recommends "0";
 Acquire::Languages "none";
+Apt::AutoRemove::SuggestsImportant "0";
 EOF
 
 apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys \

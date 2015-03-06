@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+cp -vax /lib /lib64 ${ROOTFS}
+rm -rf ${ROOTFS}/lib/{startpar,systemd}
+
+mkdir -p ${ROOTFS}/usr/lib/$(uname -m)-linux-gnu
+cp -vax /usr/lib/{locale,klibc} ${ROOTFS}/usr/lib
+cp -vax /usr/lib/$(uname -m)-linux-gnu/openssl-* \
+  ${ROOTFS}/usr/lib/$(uname -m)-linux-gnu/
+
+log_end_msg

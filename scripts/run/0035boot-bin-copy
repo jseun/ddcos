@@ -1,0 +1,9 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+cp -v /bin/live-* ${ROOTFS}/bin
+cp -v /scripts/boot.sh ${ROOTFS}
+
+log_end_msg
