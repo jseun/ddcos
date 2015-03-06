@@ -3,7 +3,7 @@
 source /scripts/functions
 log_begin_msg
 
-PKGS=(${BUILDPKGS})
-apt-get purge -y --auto-remove ${PKGS[@]}
+pkgs=(${BUILDPKGS})
+apt-get purge -y --auto-remove ${pkgs[@]}
 
 log_end_msg

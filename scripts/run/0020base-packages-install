@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source /scripts/functions
-log_begin_msg
-
-PKGS=(${BASEPKGS})
-apt-get install -y ${PKGS[@]}
-
-log_end_msg

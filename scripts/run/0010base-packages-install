@@ -3,7 +3,7 @@
 source /scripts/functions
 log_begin_msg
 
-PKGS=(${BOOTPKGS})
-apt-get install -y ${PKGS[@]}
+pkgs=(${PKGS})
+apt-get install -y ${pkgs[@]}
 
 log_end_msg

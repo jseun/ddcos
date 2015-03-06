@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+vmlinuz=$(basename ${ISODIR}/live/vmlinuz-*)
+initrd=$(basename ${ISODIR}/live/initrd.img-*)
+
+cp -vax /tmp/isolinux ${ISODIR}
+sed -i  -e "s/@KERNEL@/${vmlinuz}/" \
+        -e "s/@INITRD@/${initrd}/" \
+        ${ISODIR}/isolinux/isolinux.cfg
+
+log_end_msg

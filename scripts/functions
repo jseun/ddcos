@@ -31,3 +31,21 @@ run_scripts()
 		fi
 	done)
 }
+
+copy_binary_to_rootfs()
+{
+  rootdir=${1}; shift
+  for bin in $@; do
+    locbin=$(whereis $bin | cut -f2 -d' ')
+    destdir=${rootdir}$(dirname $locbin)
+    [ -d $destdir ] || mkdir -p $destdir
+    cp -v $locbin $destdir
+    for lib in $(ldd $locbin | awk '/=> /{print $3}'); do
+      [ -e ${rootdir}${lib} ] && continue
+      destdir=${rootdir}$(dirname $lib)
+      [ -d $destdir ] || mkdir -p $destdir
+      # we don't care about lib symlinks here.
+      cp -v $lib $destdir
+    done
+  done
+}

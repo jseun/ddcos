@@ -6,8 +6,8 @@ log_begin_msg
 echo 'debconf debconf/frontend select Noninteractive' | \
     debconf-set-selections \
 
-PKGS=(${BASEPKGS} ${BOOTPKGS} ${RUNPKGS})
-(cd ${PKGDIR}; apt-get -sy install ${PKGS[@]} | \
+pkgs=(${PKGS})
+(cd ${PKGDIR}; apt-get -sy install ${pkgs[@]} | \
   awk '/^Inst /{print $2}' | xargs apt-get download)
 
 log_end_msg

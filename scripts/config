@@ -2,19 +2,24 @@
 
 DISTVER="${DISTNAME}-${VERSION}"
 BUILDPKGS="dpkg-dev"
-RUNPKGS="squashfs-tools xorriso"
-BOOTPKGS="live-boot linux-image-amd64 firmware-linux-free mdadm"
-BASEPKGS="\
+PKGS="\
+  whiptail \
+  squashfs-tools \
+  xorriso \
+\
   restartd \
   lxc-docker \
   apparmor \
   iptables \
   live-boot \
+  linux-image-amd64 \
+  firmware-linux-free \
+  mdadm \
 \
   net-tools \
   vim-tiny \
 "
-export DISTVER BUILDPKGS RUNPKGS BOOTPKGS BASEPKGS
+export DISTVER BUILDPKGS PKGS
 
 APTDIR="/archives"
 PKGDIR="/archives/dists/local/main/binary-amd64"

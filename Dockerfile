@@ -15,8 +15,10 @@ RUN /scripts/entrypoint.sh build
 
 ENV DATADIR /data
 VOLUME ["/data"]
+ENV PUBLISHER github.com/jseun
 ENV DISTNAME ddcos
 ENV VERSION 8.0-1.0-dev
 ADD scripts/run/ /scripts/run/
-ADD scripts/boot.sh /scripts/
+ADD scripts/live.sh /scripts/
+ADD scripts/install.sh /scripts/
 ADD isolinux/ /tmp/isolinux

@@ -3,24 +3,15 @@
 source /scripts/functions
 log_begin_msg
 
-cp -vax /tmp/isolinux ${ISODIR}
-apt-get install -y xorriso
-vmlinuz=$(basename ${ISODIR}/live/vmlinuz-*)
-initrd=$(basename ${ISODIR}/live/initrd.img-*)
-
-sed -i  -e "s/@KERNEL@/${vmlinuz}/" \
-        -e "s/@INITRD@/${initrd}/" \
-        ${ISODIR}/isolinux/isolinux.cfg
-
-apt-get install -y xorriso
-
-xorriso -publisher "github.com/jseun"                           \
+cp -v ${LIVEROOTFS}.squashfs ${ISODIR}/install/live.squashfs
+cp -v ${INSTALLROOTFS}.squashfs ${ISODIR}/live/filesystem.squashfs
+xorriso -publisher "${PUBLISHER}"                               \
         -as mkisofs -l -J -R                                    \
         -V "${DISTVER}"                                         \
         -no-emul-boot -boot-load-size 4 -boot-info-table        \
         -b isolinux/isolinux.bin                                \
         -c isolinux/boot.cat                                    \
         -isohybrid-mbr ${ISODIR}/isolinux/isohdpfx.bin          \
-        -o $ISOFILE $ISODIR
+        -o $INSTALLISOFILE $ISODIR
 
 log_end_msg

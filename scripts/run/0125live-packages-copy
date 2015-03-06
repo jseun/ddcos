@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+rm -rf ${LIVEROOTFS}
+cp -ax ${ROOTFS} ${LIVEROOTFS}
+cp -v /scripts/live.sh ${LIVEROOTFS}/init.sh
+
+copy_binary_to_rootfs ${LIVEROOTFS} restartd iptables docker
+
+log_end_msg

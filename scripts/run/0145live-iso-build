@@ -1,0 +1,16 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+cp -v ${LIVEROOTFS}.squashfs ${ISODIR}/live/filesystem.squashfs
+xorriso -publisher "${PUBLISHER}"                               \
+        -as mkisofs -l -J -R                                    \
+        -V "${DISTVER}"                                         \
+        -no-emul-boot -boot-load-size 4 -boot-info-table        \
+        -b isolinux/isolinux.bin                                \
+        -c isolinux/boot.cat                                    \
+        -isohybrid-mbr ${ISODIR}/isolinux/isohdpfx.bin          \
+        -o $LIVEISOFILE $ISODIR
+
+log_end_msg

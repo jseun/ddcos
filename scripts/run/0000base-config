@@ -3,13 +3,16 @@
 source /scripts/functions
 log_begin_msg
 
-for dir in bin dev etc proc root run sbin srv sys tmp usr \
-  var var/run var/log var/lib; do
-  [ -d "${ROOTFS}/$dir" ] || mkdir -p ${ROOTFS}/$dir
+rm -rf ${ROOTFS}
+for dir in bin dev etc proc root run sbin sys tmp usr \
+  usr/lib usr/bin usr/sbin var var/run var/log var/lib; do
+  mkdir -p ${ROOTFS}/$dir
 done
 
-for dir in $ISODIR $ISOLIVEDIR; do
+for dir in $ISODIR ${ISODIR}/live; do
   [ -d "$dir" ] || mkdir -p $dir
 done
+
+echo $DISTVER > /etc/version
 
 log_end_msg

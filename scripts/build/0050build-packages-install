@@ -6,7 +6,7 @@ log_begin_msg
 echo 'debconf debconf/frontend select Noninteractive' | \
     debconf-set-selections \
 
-PKGS=(${BUILDPKGS})
-apt-get install -y ${PKGS[@]}
+pkgs=(${BUILDPKGS})
+apt-get install -y ${pkgs[@]}
 
 log_end_msg

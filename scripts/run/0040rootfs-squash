@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source /scripts/functions
-log_begin_msg
-
-apt-get install -y squashfs-tools
-mksquashfs ${ROOTFS} ${ISOLIVEDIR}/filesystem.squashfs -comp xz -noappend
-
-log_end_msg
