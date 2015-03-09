@@ -1,8 +1,0 @@
-#!/bin/bash
-
-source /scripts/functions
-log_begin_msg
-
-mksquashfs ${LIVEROOTFS} ${LIVEROOTFS}.squashfs -comp xz -noappend
-
-log_end_msg

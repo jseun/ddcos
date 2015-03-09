@@ -1,0 +1,10 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+destdir=${SQUASHFSDIR}/03utils
+mkdir -p $destdir
+copy_binary_to_rootfs ${destdir} ifconfig ping vi more mke2fs cfdisk ldd
+
+log_end_msg

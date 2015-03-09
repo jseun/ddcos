@@ -6,10 +6,10 @@ PKGS="\
   whiptail \
   squashfs-tools \
   xorriso \
+  extlinux \
+  syslinux-common \
 \
-  restartd \
   lxc-docker \
-  apparmor \
   iptables \
   live-boot \
   linux-image-amd64 \

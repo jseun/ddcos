@@ -34,18 +34,23 @@ run_scripts()
 
 copy_binary_to_rootfs()
 {
-  rootdir=${1}; shift
+  local _rootdir _locbin _destdir
+  _rootdir=${1}; shift
   for bin in $@; do
-    locbin=$(whereis $bin | cut -f2 -d' ')
-    destdir=${rootdir}$(dirname $locbin)
-    [ -d $destdir ] || mkdir -p $destdir
-    cp -v $locbin $destdir
-    for lib in $(ldd $locbin | awk '/=> /{print $3}'); do
-      [ -e ${rootdir}${lib} ] && continue
-      destdir=${rootdir}$(dirname $lib)
-      [ -d $destdir ] || mkdir -p $destdir
+    _locbin=$(whereis $bin | cut -f2 -d' ')
+    [ -e "$_locbin" ] || continue
+    _destdir=${_rootdir}$(dirname $_locbin)
+    [ -d $_destdir ] || mkdir -p $_destdir
+    cp -vL $_locbin $_destdir/$bin
+    for lib in $(ldd $_locbin | awk '/=> /{print $3}'); do
+      for dir in ${SQUASHFSDIR}/*/; do
+        [ -e ${dir%%/}${lib} ] && continue 2
+      done
+      [ -e ${_rootdir}${lib} ] && continue
+      _destdir=${_rootdir}$(dirname $lib)
+      [ -d $_destdir ] || mkdir -p $_destdir
       # we don't care about lib symlinks here.
-      cp -v $lib $destdir
+      cp -v $lib $_destdir
     done
   done
 }

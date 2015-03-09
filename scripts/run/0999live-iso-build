@@ -3,7 +3,6 @@
 source /scripts/functions
 log_begin_msg
 
-cp -v ${INSTALLROOTFS}.squashfs ${ISODIR}/live/install.squashfs
 xorriso -publisher "${PUBLISHER}"                               \
         -as mkisofs -l -J -R                                    \
         -V "${DISTVER}"                                         \
@@ -11,6 +10,6 @@ xorriso -publisher "${PUBLISHER}"                               \
         -b isolinux/isolinux.bin                                \
         -c isolinux/boot.cat                                    \
         -isohybrid-mbr ${ISODIR}/isolinux/isohdpfx.bin          \
-        -o $INSTALLISOFILE $ISODIR
+        -o $ISOFILE $ISODIR
 
 log_end_msg

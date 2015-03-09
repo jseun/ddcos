@@ -25,13 +25,14 @@ is_md_device()
 
 find_usable_storage() {
 	usable_disks=()
-	for devname in $(lsblk -n -o NAME,TYPE | egrep "disk" | \
+	for devname in $(lsblk -n -o NAME,TYPE | grep "disk" | \
 	    awk '{print $1}'); do
 		[ -e "/dev/$devname" ] || continue
 		model=$(udevadm info -n /dev/${devname} -q property | \
 		    sed -n 's/^ID_MODEL=//p')
 		usable_disks+=($devname "(${model})")
 	done
+echo ${usable_disks[@]}
 }
 
 select_disk()
@@ -43,9 +44,9 @@ select_disk()
 
 erase_disk()
 {
-	if (whiptail --title "WARNING! About to erase disk /dev/${disk}" --yesno "A fresh install of ICOS on the disk WILL ERASE ALL DATA you may have on it.  Continue anyway?" 8 78) then
+	if (whiptail --title "WARNING! About to erase disk /dev/${disk}" --yesno "A fresh install WILL ERASE ALL DATA you may have on it.  Continue anyway?" 8 78) then
 		echo "Erasing disk /dev/${disk}"
-		pv -tpreb /dev/zero | dd of=/dev/${disk} bs=1 seek=446 count=64 conv=notrunc
+		dd if=/dev/zero of=/dev/${disk} bs=1 seek=446 count=64 conv=notrunc
 		return 0
 	else
 		return 1
@@ -54,13 +55,8 @@ erase_disk()
 
 format_disk()
 {
-	# Create docker partition (10G).
-	printf "n\np\n\n\n+10G\nw\n" | fdisk /dev/$disk
-	mkfs.btrfs -L docker -f /dev/${disk}1
-
-	# Create persistent partition (remaining).
-	printf "n\np\n\n\n\nw\n" | fdisk /dev/$disk
-	mkfs.ext4 -L casper-rw /dev/${disk}2
+  printf "n\np\n\n\n\nw\n" | fdisk /dev/$disk
+  mkfs.ext4 -L persistence /dev/${disk}1
 }
 
 build_iso_again()
@@ -68,7 +64,7 @@ build_iso_again()
 	outdir=$1
 	[ -e $outdir ] || mkdir -p $outdir 
 	isoname=$(cat /etc/version)
-	xorriso -publisher "IDS MICRONET" -as mkisofs -l -J -R \
+	xorriso -publisher "$(cat /etc/publisher)" -as mkisofs -l -J -R \
 		-V "$(cat /etc/version)" -no-emul-boot -boot-load-size 4 \
 		-boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat \
 		-isohybrid-mbr /usr/lib/syslinux/isohdpfx.bin \
@@ -77,45 +73,33 @@ build_iso_again()
 
 mount_persistent_fs()
 {
-    rootfs=$1
-    mkdir -p /cow $rootfs
-    cowdevice=$(blkid -L casper-rw)
-    cow_fstype="ext4"
-    cow_mountopt="rw,noatime"
-
-    mount -t $cow_fstype -o $cow_mountopt $cowdevice /cow
-
-    case ${UNIONFS} in
-        aufs|unionfs)
-            mount -t ${UNIONFS} -o noatime,dirs=/cow=rw:/rofs=ro \
-		$cowdevice $rootfs
-            ;;
-        overlayfs)
-            mount -t overlayfs -o "upperdir=/cow,lowerdir=/rofs" \
-		$cowdevice $rootfs
-            ;;
-    esac
-
-    for i in /dev /dev/pts /proc /sys /run; do mount -B $i ${rootfs}$i; done
+  mkdir -p /mnt
+  mount -t ext4 -o rw /dev/${disk}1 /mnt
 }
 
 umount_persistent_fs()
 {
-	rootfs=$1
-	for i in /dev/pts /dev /proc /sys /run; do \
-		umount ${rootfs}$i; done
-	umount $rootfs
-	umount $cowdevice
+  umount /mnt
 }
 
 config_boot_loader()
 {
-	rootfs=$1
-	chroot $rootfs dpkg -i /tmp/install-tools/*.deb
-	/tmp/scripts/write_grub_config.sh \
-		"${rootfs}/etc/grub.d/99_icos"
-	chmod +x ${rootfs}/etc/grub.d/99_icos
-	chroot $rootfs update-grub
+  mkdir -p /mnt/boot/syslinux
+  cp -r /usr/lib/syslinux/modules/bios/*.c32 /mnt/boot/syslinux
+  extlinux --install /mnt/boot/syslinux
+  printf '\x1' | cat /usr/lib/syslinux/mbr/altmbr.bin - | \
+    dd bs=440 count=1 iflag=fullblock of=/dev/${disk}
+
+  cat <<EOF > /mnt/persistence.conf
+/bin  union
+/etc  union
+/lib  union
+/sbin union
+/usr  union
+/boot bind
+/var  bind
+EOF
+
 }
 
 do_install()
@@ -124,20 +108,10 @@ do_install()
 	select_disk
 	erase_disk || return 1
 	format_disk
-	mount_persistent_fs "/rootfs"
-	build_iso_again "/rootfs/boot"
-	config_boot_loader "/rootfs"
-	umount_persistent_fs "/rootfs"
-}
-
-do_upgrade()
-{
-	find_usable_storage
-	select_disk
-	mount_persistent_fs "/rootfs"
-	build_iso_again "/rootfs/boot"
-	config_boot_loader "/rootfs"
-	umount_persistent_fs "/rootfs"
+	mount_persistent_fs
+	build_iso_again "/mnt/boot"
+	config_boot_loader
+	umount_persistent_fs
 }
 
 while true; do

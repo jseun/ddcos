@@ -3,6 +3,9 @@
 source /scripts/functions
 log_begin_msg
 
+cp -v /boot/vmlinuz-* ${ISODIR}/live
+cp -v /boot/initrd.img-* ${ISODIR}/live
+
 vmlinuz=$(basename ${ISODIR}/live/vmlinuz-*)
 initrd=$(basename ${ISODIR}/live/initrd.img-*)
 
@@ -10,5 +13,10 @@ cp -vax /tmp/isolinux ${ISODIR}
 sed -i  -e "s/@KERNEL@/${vmlinuz}/" \
         -e "s/@INITRD@/${initrd}/" \
         ${ISODIR}/isolinux/isolinux.cfg
+
+cp -v ${SQUASHFSDIR}/*.squashfs ${ISODIR}/live
+
+echo $DISTVER > ${ISODIR}/version
+echo $PUBLISHER > ${ISODIR}/publisher
 
 log_end_msg

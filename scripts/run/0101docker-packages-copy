@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+destdir=${SQUASHFSDIR}/01docker
+mkdir -p $destdir
+
+copy_binary_to_rootfs $destdir iptables docker
+
+cp -vax /lib/xtables ${destdir}/lib
+
+log_end_msg

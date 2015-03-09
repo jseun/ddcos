@@ -1,0 +1,59 @@
+#!/bin/bash
+
+source /scripts/functions
+log_begin_msg
+
+destdir=${SQUASHFSDIR}/00live
+mkdir -p $destdir
+cp -v /scripts/init.sh $destdir
+
+for dir in bin dev etc lib proc root run sbin sys tmp usr \
+  usr/lib usr/bin usr/sbin var var/run var/log var/lib; do
+  mkdir -p ${destdir}/$dir
+done
+
+cp -vax /lib64 ${destdir}
+
+libdir=$(uname -m)-linux-gnu
+destlibdir=${destdir}/lib/$libdir
+mkdir -p $destlibdir
+cp -Pv /lib/${libdir}/libnss_* $destlibdir
+cp /lib/${libdir}/ld-* $destlibdir
+
+destlibdir=${destdir}/usr/lib/$libdir
+mkdir -p $destlibdir
+#for lib in db form formw menu menuw panel panelw \
+#  semanage stdc++ tic usb ustr; do
+#  cp -Pv /usr/lib/${libdir}/lib${lib}.* $destlibdir
+#  cp -Pv /usr/lib/${libdir}/lib${lib}-* $destlibdir
+#done
+#cp -vax /usr/lib/${libdir}/{audit,gconv} $destlibdir
+cp -v /lib/klibc-* ${destdir}/lib
+cp -vax /lib/modules ${destdir}/lib
+
+# Binaries from klibc-utils
+for bin in cat dmesg false gunzip gzip ipconfig \
+  kill ln ls mv reboot sleep \
+  sync true uname zcat; do
+  cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
+done
+
+cp -v /bin/live-* ${destdir}/bin
+copy_binary_to_rootfs ${destdir} bash cp dd mount umount \
+  egrep grep printf awk ps touch mkdir sed env \
+  mountpoint rm head tail hwclock date echo
+(cd ${destdir}/bin; ln -sf bash sh)
+(cd ${destdir}; ln -sf /usr/bin/touch bin)
+
+# Configuration files
+for conffile in fstab group gshadow hostname hosts ld.so.cache \
+  ld.so.conf localtime nsswitch.conf passwd protocols resolv.conf \
+  services shadow shells; do
+  cp -v /etc/$conffile ${destdir}/etc
+done
+
+for confdir in init.d ld.so.conf.d network selinux security udev; do
+  cp -vax /etc/$confdir ${destdir}/etc
+done
+
+log_end_msg
