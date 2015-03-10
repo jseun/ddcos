@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /scripts/functions
+source ./functions
 log_begin_msg
 
 cat <<EOF > /etc/apt/apt.conf.d/99ddcos-build

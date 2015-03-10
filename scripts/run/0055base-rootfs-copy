@@ -1,10 +1,9 @@
 #!/bin/bash
 
-source /scripts/functions
+source ./functions
 log_begin_msg
 
-destdir=${SQUASHFSDIR}/00live
-mkdir -p $destdir
+destdir=${SQUASHFSROOTDIR}; mkdir -p $destdir
 cp -v /scripts/init.sh $destdir
 
 for dir in bin dev etc lib proc root run sbin sys tmp usr \
@@ -15,19 +14,12 @@ done
 cp -vax /lib64 ${destdir}
 
 libdir=$(uname -m)-linux-gnu
-destlibdir=${destdir}/lib/$libdir
-mkdir -p $destlibdir
+
+destlibdir=${destdir}/lib/$libdir; mkdir -p $destlibdir
 cp -Pv /lib/${libdir}/libnss_* $destlibdir
 cp /lib/${libdir}/ld-* $destlibdir
 
-destlibdir=${destdir}/usr/lib/$libdir
-mkdir -p $destlibdir
-#for lib in db form formw menu menuw panel panelw \
-#  semanage stdc++ tic usb ustr; do
-#  cp -Pv /usr/lib/${libdir}/lib${lib}.* $destlibdir
-#  cp -Pv /usr/lib/${libdir}/lib${lib}-* $destlibdir
-#done
-#cp -vax /usr/lib/${libdir}/{audit,gconv} $destlibdir
+destlibdir=${destdir}/usr/lib/$libdir; mkdir -p $destlibdir
 cp -v /lib/klibc-* ${destdir}/lib
 cp -vax /lib/modules ${destdir}/lib
 

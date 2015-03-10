@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /scripts/functions
+source ./functions
 log_begin_msg
 
 for dir in "$APTDIR $PKGDIR"; do
