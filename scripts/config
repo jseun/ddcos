@@ -9,15 +9,18 @@ PKGS="\
   extlinux \
   syslinux-common \
 \
+  ca-certificates \
   lxc-docker \
   iptables \
+  bridge-utils \
   live-boot \
   linux-image-amd64 \
   firmware-linux-free \
   mdadm \
-\
   net-tools \
+\
   vim-tiny \
+  strace \
 "
 export DISTVER BUILDPKGS PKGS
 

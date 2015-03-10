@@ -7,21 +7,20 @@ destdir=${SQUASHFSROOTDIR}; mkdir -p $destdir
 cp -v /scripts/init.sh $destdir
 
 for dir in bin dev etc lib proc root run sbin sys tmp usr \
-  usr/lib usr/bin usr/sbin var var/run var/log var/lib; do
+  usr/lib usr/bin usr/sbin usr/share var var/run var/log var/lib; do
   mkdir -p ${destdir}/$dir
 done
 
 cp -vax /lib64 ${destdir}
+cp -v /lib/klibc-* ${destdir}/lib
+cp -vax /lib/{init,lsb,modules,terminfo,xtables} ${destdir}/lib
 
 libdir=$(uname -m)-linux-gnu
-
 destlibdir=${destdir}/lib/$libdir; mkdir -p $destlibdir
+cp -v /lib/${libdir}/libnsl-* $destlibdir
+cp -Pv /lib/${libdir}/libnsl.* $destlibdir
 cp -Pv /lib/${libdir}/libnss_* $destlibdir
-cp /lib/${libdir}/ld-* $destlibdir
-
-destlibdir=${destdir}/usr/lib/$libdir; mkdir -p $destlibdir
-cp -v /lib/klibc-* ${destdir}/lib
-cp -vax /lib/modules ${destdir}/lib
+cp -v /lib/${libdir}/ld-* $destlibdir
 
 # Binaries from klibc-utils
 for bin in cat dmesg false gunzip gzip ipconfig \
@@ -31,21 +30,30 @@ for bin in cat dmesg false gunzip gzip ipconfig \
 done
 
 cp -v /bin/live-* ${destdir}/bin
-copy_binary_to_rootfs ${destdir} bash cp dd mount umount \
-  egrep grep printf awk ps touch mkdir sed env \
-  mountpoint rm head tail hwclock date echo
+copy_binary_to_rootfs ${destdir} echo bash cp dd mount umount awk ps \
+  egrep grep printf touch mkdir rmdir sed find env chgrp ulimit id \
+  mountpoint rm head tail hwclock date modprobe insmod lsmod \
+  start-stop-daemon test basename iptables docker brctl clear \
+  ifconfig ping
 (cd ${destdir}/bin; ln -sf bash sh)
 (cd ${destdir}; ln -sf /usr/bin/touch bin)
 
 # Configuration files
-for conffile in fstab group gshadow hostname hosts ld.so.cache \
-  ld.so.conf localtime nsswitch.conf passwd protocols resolv.conf \
-  services shadow shells; do
+printf 'DOCKER_OPTS="-s aufs --host tcp://0.0.0.0:2375 \
+  --host unix:///var/run/docker.sock"\n' >> /etc/default/docker
+groupadd docker
+
+for conffile in ca-certificates.conf fstab group gshadow hostname \
+  hosts ld.so.cache ld.so.conf localtime nsswitch.conf passwd protocols \
+  resolv.conf services shadow shells; do
   cp -v /etc/$conffile ${destdir}/etc
 done
 
-for confdir in init.d ld.so.conf.d network selinux security udev; do
+for confdir in default init.d ld.so.conf.d network selinux security; do
   cp -vax /etc/$confdir ${destdir}/etc
 done
+
+mkdir -p ${destdir}/etc/ssl
+cp -vax /etc/ssl/certs ${destdir}/etc/ssl
 
 log_end_msg

@@ -5,6 +5,6 @@ log_begin_msg
 
 destdir=${SQUASHFSDIR}/utils
 mkdir -p $destdir
-copy_binary_to_rootfs ${destdir} ifconfig ping vi more mke2fs cfdisk ldd
+copy_binary_to_rootfs ${destdir} ifconfig ping vi more mke2fs cfdisk ldd strace
 
 log_end_msg
