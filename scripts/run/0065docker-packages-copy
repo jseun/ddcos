@@ -3,11 +3,12 @@
 source ./functions
 log_begin_msg
 
-destdir=${SQUASHFSDIR}/01docker
+destdir=${SQUASHFSDIR}/docker
 mkdir -p $destdir
 
 copy_binary_to_rootfs $destdir iptables docker
 
+mkdir -p ${destdir}/lib
 cp -vax /lib/xtables ${destdir}/lib
 
 log_end_msg

@@ -3,7 +3,7 @@
 source ./functions
 log_begin_msg
 
-destdir=${SQUASHFSDIR}/03utils
+destdir=${SQUASHFSDIR}/utils
 mkdir -p $destdir
 copy_binary_to_rootfs ${destdir} ifconfig ping vi more mke2fs cfdisk ldd
 

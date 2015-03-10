@@ -3,7 +3,7 @@
 source ./functions
 log_begin_msg
 
-destdir=${SQUASHFSDIR}/02install
+destdir=${SQUASHFSDIR}/install
 mkdir -p $destdir
 cp -v /scripts/install.sh $destdir
 
