@@ -38,6 +38,7 @@ Origin: local
 Architectures: amd64
 EOF
 
+rm -rf /var/lib/apt/lists/*
 apt-get update
 
 log_end_msg
