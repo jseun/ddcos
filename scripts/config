@@ -11,6 +11,7 @@ PKGS="\
 \
   ca-certificates \
   lxc-docker \
+  aufs-tools \
   iptables \
   iproute2 \
   bridge-utils \

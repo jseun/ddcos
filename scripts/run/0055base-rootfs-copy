@@ -20,6 +20,8 @@ destlibdir=${destdir}/lib/$libdir; mkdir -p $destlibdir
 cp -v /lib/${libdir}/libnsl-* $destlibdir
 cp -Pv /lib/${libdir}/libnsl.* $destlibdir
 cp -Pv /lib/${libdir}/libnss_* $destlibdir
+cp -v /lib/${libdir}/libresolv-* $destlibdir
+cp -Pv /lib/${libdir}/libresolv.* $destlibdir
 cp -v /lib/${libdir}/ld-* $destlibdir
 
 # Binaries from klibc-utils
@@ -35,7 +37,7 @@ copy_binary_to_rootfs ${destdir} echo bash cp dd mount umount awk ps \
   mountpoint rm head tail hwclock date modprobe insmod lsmod \
   start-stop-daemon test basename iptables iptables-restore docker brctl \
   clear ifconfig ping ip bridge sysctl ip6tables ip6tables-resotre \
-  xtables-multi iptables-xml ip6tables-apply iptables-apply
+  xtables-multi iptables-xml ip6tables-apply iptables-apply auplink
 (cd ${destdir}/bin; ln -sf bash sh)
 (cd ${destdir}; ln -sf /usr/bin/touch bin)
 
