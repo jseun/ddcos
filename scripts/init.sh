@@ -2,6 +2,7 @@
 
 /etc/init.d/mountkernfs.sh start
 /etc/init.d/mountdevsubfs.sh start
+/etc/init.d/procps start
 
 ipconfig eth0
 ipaddr=$(ifconfig eth0 | awk '/inet addr/ {gsub("addr:", "", $2); print $2}')
