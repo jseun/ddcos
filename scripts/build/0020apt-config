@@ -14,6 +14,8 @@ apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys \
 printf 'deb http://get.docker.io/ubuntu/ docker main\n' > \
     /etc/apt/sources.list.d/docker.list
 
+printf 'deb http://http.debian.net/debian jessie non-free\n' >> \
+    /etc/apt/sources.list
 mv /etc/apt/sources.list /etc/apt/sources.list.d/debian.list
 
 cat <<EOF > /etc/apt/sources.list
