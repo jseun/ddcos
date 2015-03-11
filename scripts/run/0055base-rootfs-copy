@@ -13,7 +13,7 @@ done
 
 cp -vax /lib64 ${destdir}
 cp -v /lib/klibc-* ${destdir}/lib
-cp -vax /lib/{init,lsb,modules,terminfo,xtables} ${destdir}/lib
+cp -vax /lib/{firmware,init,lsb,modules,terminfo,xtables} ${destdir}/lib
 
 libdir=$(uname -m)-linux-gnu
 destlibdir=${destdir}/lib/$libdir; mkdir -p $destlibdir
@@ -43,7 +43,7 @@ printf 'DOCKER_OPTS="-s aufs --host tcp://0.0.0.0:2375 \
   --host unix:///var/run/docker.sock"\n' >> /etc/default/docker
 groupadd docker
 
-for conffile in ca-certificates.conf fstab group gshadow hostname \
+for conffile in fstab group gshadow hostname \
   hosts ld.so.cache ld.so.conf localtime nsswitch.conf passwd protocols \
   resolv.conf services shadow shells; do
   cp -v /etc/$conffile ${destdir}/etc
