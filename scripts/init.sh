@@ -9,7 +9,7 @@ ipaddr=$(ifconfig eth0 | awk '/inet addr/ {gsub("addr:", "", $2); print $2}')
 
 mkdir -p /tmp/ctrl; touch /tmp/ctrl/start
 
-if mountpoint -q "/var" && test -x /etc/init.d/docker; then
+if mountpoint -q "/var/lib/docker" && test -x /etc/init.d/docker; then
   cd /tmp/ctrl
   while :
   do
