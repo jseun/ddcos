@@ -21,6 +21,8 @@ PKGS="\
   firmware-realtek \
   mdadm \
   net-tools \
+  xz-utils \
+  git \
 \
   vim-tiny \
   strace \

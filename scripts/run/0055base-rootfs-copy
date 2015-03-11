@@ -32,12 +32,54 @@ for bin in cat dmesg false gunzip gzip ipconfig \
 done
 
 cp -v /bin/live-* ${destdir}/bin
-copy_binary_to_rootfs ${destdir} echo bash cp dd mount umount awk ps \
-  egrep grep printf touch mkdir rmdir sed find env chgrp ulimit id ls \
-  mountpoint rm head tail hwclock date modprobe insmod lsmod \
-  start-stop-daemon test basename iptables iptables-restore docker brctl \
-  clear ifconfig ping ip bridge sysctl ip6tables ip6tables-resotre \
-  xtables-multi iptables-xml ip6tables-apply iptables-apply auplink
+copy_binary_to_rootfs ${destdir} \
+  auplink \
+  awk \
+  basename \
+  bash \
+  brctl \
+  bridge \
+  chgrp \
+  clear \
+  cp \
+  date \
+  dd \
+  docker \
+  echo \
+  egrep \
+  env \
+  find \
+  grep \
+  head \
+  hwclock \
+  id \
+  ifconfig \
+  insmod \
+  ip \
+  ip6tables \
+  ip6tables-save \
+  iptables \
+  iptables-save \
+  ls \
+  lsmod \
+  mkdir \
+  modprobe \
+  mount \
+  mountpoint \
+  ping \
+  printf \
+  ps \
+  rm \
+  rmdir \
+  sed \
+  start-stop-daemon \
+  sysctl \
+  tail \
+  test \
+  touch \
+  ulimit \
+  umount
+
 (cd ${destdir}/bin; ln -sf bash sh)
 (cd ${destdir}; ln -sf /usr/bin/touch bin)
 
