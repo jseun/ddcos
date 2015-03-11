@@ -1,5 +1,0 @@
-lxc-docker
-iptables
-apparmor
-sudo
-ssh
