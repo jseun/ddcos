@@ -126,7 +126,6 @@ config_boot_loader()
 {
   mkdir -p /mnt/boot/syslinux
   cp -r /usr/lib/syslinux/modules/bios/*.c32 /mnt/boot/syslinux
-  cp /usr/lib/syslinux/memdisk /mnt/boot/syslinux
   extlinux --install /mnt/boot/syslinux
   dd bs=440 count=1 if=/usr/lib/syslinux/mbr/mbr.bin of=/dev/${disk}
 }
