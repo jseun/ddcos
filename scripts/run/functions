@@ -7,7 +7,7 @@ copy_binary_to_rootfs()
   local _rootdir _locbin _destdir
   _rootdir=${1}; shift
   for bin in $@; do
-    _locbin=$(whereis $bin | cut -f2 -d' ')
+    _locbin=$(which $bin)
     [ -e "$_locbin" ] || continue
     _destdir=${_rootdir}$(dirname $_locbin)
     [ -d $_destdir ] || mkdir -p $_destdir

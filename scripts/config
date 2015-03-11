@@ -12,6 +12,7 @@ PKGS="\
   ca-certificates \
   lxc-docker \
   iptables \
+  iproute2 \
   bridge-utils \
   live-boot \
   linux-image-amd64 \

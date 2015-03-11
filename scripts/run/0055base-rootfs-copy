@@ -33,8 +33,9 @@ cp -v /bin/live-* ${destdir}/bin
 copy_binary_to_rootfs ${destdir} echo bash cp dd mount umount awk ps \
   egrep grep printf touch mkdir rmdir sed find env chgrp ulimit id ls \
   mountpoint rm head tail hwclock date modprobe insmod lsmod \
-  start-stop-daemon test basename iptables docker brctl clear \
-  ifconfig ping
+  start-stop-daemon test basename iptables iptables-restore docker brctl \
+  clear ifconfig ping ip bridge sysctl ip6tables ip6tables-resotre \
+  xtables-multi iptables-xml ip6tables-apply iptables-apply
 (cd ${destdir}/bin; ln -sf bash sh)
 (cd ${destdir}; ln -sf /usr/bin/touch bin)
 
@@ -45,16 +46,14 @@ groupadd docker
 
 for conffile in fstab group gshadow hostname \
   hosts ld.so.cache ld.so.conf localtime nsswitch.conf passwd protocols \
-  resolv.conf services shadow shells; do
+  resolv.conf services shadow shells sysctl.conf; do
   cp -v /etc/$conffile ${destdir}/etc
 done
 
-for confdir in default init.d ld.so.conf.d network selinux security; do
+for confdir in default init.d iproute2 ld.so.conf.d \
+  network selinux security ssl sysctl.d; do
   cp -vax /etc/$confdir ${destdir}/etc
 done
-
-mkdir -p ${destdir}/etc/ssl
-cp -vax /etc/ssl/certs ${destdir}/etc/ssl
 
 echo $DISTVER > ${destdir}/etc/version
 echo $PUBLISHER > ${destdir}/etc/publisher

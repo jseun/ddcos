@@ -15,6 +15,5 @@ copy_binary_to_rootfs $destdir whiptail lsblk udevadm \
 mkdir -p ${destdir}/usr/lib/syslinux/modules
 cp -vax /usr/lib/syslinux/modules/bios ${destdir}/usr/lib/syslinux/modules
 cp -vax /usr/lib/syslinux/mbr ${destdir}/usr/lib/syslinux
-cp -v /usr/lib/syslinux/memdisk ${destdir}/usr/lib/syslinux
 
 log_end_msg
