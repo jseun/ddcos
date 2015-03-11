@@ -76,11 +76,19 @@ copy_live_to_disk()
   cp -vax $LIVE_PATH /mnt/boot/$DISTVER
 }
 
+copy_docker_to_disk()
+{
+  version=$(docker version | awk '/Server version:/{print $3}')
+  mkdir -p /mnt/usr/bin; cp -v /usr/bin/docker /mnt/usr/bin/docker-$version
+  (cd /mnt/usr/bin; ln -sf docker-$version docker)
+}
+
 write_persistence_conf()
 {
   cat <<EOF > /mnt/persistence.conf
-/etc  union
-/var/lib/docker  bind
+/etc            union
+/usr/bin        union
+/var/lib/docker bind
 EOF
 }
 
@@ -132,6 +140,7 @@ do_install()
   mount_persistent_fs
   write_persistence_conf
   copy_live_to_disk
+  copy_docker_to_disk
   config_boot_loader
   write_boot_config
   umount_persistent_fs
