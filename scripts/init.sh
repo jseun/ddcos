@@ -14,15 +14,14 @@ if mountpoint -q "/var" && test -x /etc/init.d/docker; then
   do
     for cmd in *; do
       case "$cmd" in
-        start|stop|restart)
+        start|restart)
           /etc/init.d/docker $cmd
-          break
           ;;
         reboot|shutdown)
           /etc/init.d/docker stop
           /etc/init.d/mountdevsubfs.sh stop
           /etc/init.d/mountkernfs.sh stop
-          exec "$@"
+          exec "$cmd"
           ;;
         *) echo "Unknown command: $cmd"
           ;;
@@ -35,7 +34,10 @@ if mountpoint -q "/var" && test -x /etc/init.d/docker; then
       docker ps 2>/dev/null && echo && \
         echo "Docker is reachable at tcp://${ipaddr}:2375"
     else
-      echo "Docker is not started."
+      echo "Docker failed to start. Here's the last 10 lines of /var/log/docker.log"
+      echo; tail -10 /var/log/docker.log; echo
+      echo; echo "Use 'touch /tmp/ctrl/start; exit' to start again."
+      /bin/bash --norc
     fi
 
     sleep 5
