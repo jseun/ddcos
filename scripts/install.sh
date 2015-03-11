@@ -78,7 +78,7 @@ copy_live_to_disk()
 
 copy_docker_to_disk()
 {
-  version=$(/usr/bin/docker version | awk '/Server version:/{print $3}')
+  version=$(/usr/bin/docker version | awk '/Client version:/{print $3}')
   mkdir -p /mnt/usr/bin; cp -v /usr/bin/docker /mnt/usr/bin/docker-$version
   (cd /mnt/usr/bin; ln -sf docker-$version docker)
 }
