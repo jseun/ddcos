@@ -80,7 +80,7 @@ write_persistence_conf()
 {
   cat <<EOF > /mnt/persistence.conf
 /etc  union
-/var  bind
+/var/lib/docker  bind
 EOF
 }
 
