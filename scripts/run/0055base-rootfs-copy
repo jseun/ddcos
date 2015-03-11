@@ -24,14 +24,14 @@ cp -v /lib/${libdir}/ld-* $destlibdir
 
 # Binaries from klibc-utils
 for bin in cat dmesg false gunzip gzip ipconfig \
-  kill ln ls mv reboot sleep \
+  kill ln mv reboot sleep \
   sync true uname zcat; do
   cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
 done
 
 cp -v /bin/live-* ${destdir}/bin
 copy_binary_to_rootfs ${destdir} echo bash cp dd mount umount awk ps \
-  egrep grep printf touch mkdir rmdir sed find env chgrp ulimit id \
+  egrep grep printf touch mkdir rmdir sed find env chgrp ulimit id ls \
   mountpoint rm head tail hwclock date modprobe insmod lsmod \
   start-stop-daemon test basename iptables docker brctl clear \
   ifconfig ping
@@ -55,5 +55,8 @@ done
 
 mkdir -p ${destdir}/etc/ssl
 cp -vax /etc/ssl/certs ${destdir}/etc/ssl
+
+echo $DISTVER > ${destdir}/etc/version
+echo $PUBLISHER > ${destdir}/etc/publisher
 
 log_end_msg

@@ -27,3 +27,6 @@ export DISTVER BUILDPKGS PKGS
 APTDIR="/archives"
 PKGDIR="/archives/dists/local/main/binary-amd64"
 export APTDIR PKGDIR
+
+KERNEL_BOOT_PARAMS="quiet splash persistence cgroup_enable=memory swapaccount=1 init=/init.sh"
+export KERNEL_BOOT_PARAMS

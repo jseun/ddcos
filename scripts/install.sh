@@ -1,9 +1,7 @@
 #!/bin/bash
-#
-# ICOS distribution installer.
-#
-# Maintainer: Samuel Jean <sjean@idsmicronet.com>
 
+LIVE_PATH=/lib/live/mount/persistence/sr0/live
+DISTVER=$(cat /etc/version)
 usable_disks=()
 disk=
 
@@ -28,8 +26,9 @@ find_usable_storage() {
 	for devname in $(lsblk -n -o NAME,TYPE | grep "disk" | \
 	    awk '{print $1}'); do
 		[ -e "/dev/$devname" ] || continue
-		model=$(udevadm info -n /dev/${devname} -q property | \
-		    sed -n 's/^ID_MODEL=//p')
+		#model=$(udevadm info -n /dev/${devname} -q property | \
+		#    sed -n 's/^ID_MODEL=//p')
+                model="Hard disk"
 		usable_disks+=($devname "(${model})")
 	done
 echo ${usable_disks[@]}
@@ -55,21 +54,21 @@ erase_disk()
 
 format_disk()
 {
-  printf "n\np\n\n\n\nw\n" | fdisk /dev/$disk
+  printf "n\np\n\n\n\na\nw\n" | fdisk /dev/$disk
   mkfs.ext4 -L persistence /dev/${disk}1
 }
 
-build_iso_again()
-{
-	outdir=$1
-	[ -e $outdir ] || mkdir -p $outdir 
-	isoname=$(cat /etc/version)
-	xorriso -publisher "$(cat /etc/publisher)" -as mkisofs -l -J -R \
-		-V "$(cat /etc/version)" -no-emul-boot -boot-load-size 4 \
-		-boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat \
-		-isohybrid-mbr /usr/lib/syslinux/isohdpfx.bin \
-		-o ${outdir}/${isoname}.iso /cdrom
-}
+#build_iso_again()
+#{
+#	outdir=$1
+#	[ -e $outdir ] || mkdir -p $outdir
+#	isoname=$(cat /etc/version)
+#	xorriso -publisher "$(cat /etc/publisher)" -as mkisofs -l -J -R \
+#		-V "$(cat /etc/version)" -no-emul-boot -boot-load-size 4 \
+#		-boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat \
+#		-isohybrid-mbr /lib/live/mount/persistence/sr0/isolinux/isohdpfx.bin \
+#		-o ${outdir}/${isoname}.iso /lib/live/mount/persistence/sr0
+#}
 
 mount_persistent_fs()
 {
@@ -82,40 +81,77 @@ umount_persistent_fs()
   umount /mnt
 }
 
+copy_live_to_disk()
+{
+  [ -e $LIVE_PATH ] || return 1
+  [ -d /mnt/boot ] || mkdir -p /mnt/boot
+  cp -vax $LIVE_PATH /mnt/boot/$DISTVER
+}
+
+write_persistence_conf()
+{
+  cat <<EOF > /mnt/persistence.conf
+/etc  union
+/var  bind
+EOF
+}
+
+write_boot_config()
+{
+  sl_conf_file=/mnt/boot/syslinux/syslinux.cfg
+  cat <<EOF > $sl_conf_file
+UI menu.c32
+PROMPT 0
+MENU TITLE Boot Menu
+TIMEOUT 50
+EOF
+  allos=($(cd /mnt/boot; ls -d * | egrep -v syslinux))
+  for os in ${allos[@]}; do
+    kernel=$(basename /mnt/boot/$os/vmlinuz-*)
+    initrd=$(basename /mnt/boot/$os/initrd.img-*)
+    kernel_boot_params=$(cat /mnt/boot/$os/bootparams.txt)
+    cat <<EOF >> $sl_conf_file
+
+LABEL $os
+  MENU LABEL $os
+  LINUX /boot/$os/$kernel
+  INITRD /boot/$os/$initrd 
+  APPEND boot=live live-media-path=boot/$os ${kernel_boot_params}
+
+EOF
+  done
+  cat <<EOF >> $sl_conf_file
+
+DEFAULT $os
+EOF
+}
+
 config_boot_loader()
 {
   mkdir -p /mnt/boot/syslinux
   cp -r /usr/lib/syslinux/modules/bios/*.c32 /mnt/boot/syslinux
+  cp /usr/lib/syslinux/memdisk /mnt/boot/syslinux
   extlinux --install /mnt/boot/syslinux
-  printf '\x1' | cat /usr/lib/syslinux/mbr/altmbr.bin - | \
-    dd bs=440 count=1 iflag=fullblock of=/dev/${disk}
-
-  cat <<EOF > /mnt/persistence.conf
-/bin  union
-/etc  union
-/lib  union
-/sbin union
-/usr  union
-/boot bind
-/var  bind
-EOF
-
+  dd bs=440 count=1 if=/usr/lib/syslinux/mbr/mbr.bin of=/dev/${disk}
 }
 
 do_install()
 {
-	find_usable_storage
-	select_disk
-	erase_disk || return 1
-	format_disk
-	mount_persistent_fs
-	build_iso_again "/mnt/boot"
-	config_boot_loader
-	umount_persistent_fs
+  find_usable_storage
+  select_disk
+  erase_disk || return 1
+  format_disk
+  mount_persistent_fs
+  write_persistence_conf
+  copy_live_to_disk
+  #build_iso_again "/mnt/boot"
+  config_boot_loader
+  write_boot_config
+  umount_persistent_fs
 }
 
 while true; do
-	case $(whiptail --title "$(cat /etc/version)" \
+	case $(whiptail --title "$DISTVER" \
 		--menu "\nWelcome to the installer. What do you want to do?" \
 		20 78 8 \
 		"1." "Install system" \
