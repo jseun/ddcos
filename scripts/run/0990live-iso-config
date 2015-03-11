@@ -12,11 +12,10 @@ initrd=$(basename ${ISODIR}/live/initrd.img-*)
 cp -vax /tmp/isolinux ${ISODIR}
 sed -i  -e "s/@KERNEL@/${vmlinuz}/" \
         -e "s/@INITRD@/${initrd}/" \
+	-e "s#@KERNEL_BOOT_PARAMS@#${KERNEL_BOOT_PARAMS}#" \
         ${ISODIR}/isolinux/isolinux.cfg
 
 cp -v ${SQUASHFSDIR}/*.squashfs ${ISODIR}/live
-
-echo $DISTVER > ${ISODIR}/version
-echo $PUBLISHER > ${ISODIR}/publisher
+echo $KERNEL_BOOT_PARAMS > ${ISODIR}/live/bootparams.txt
 
 log_end_msg
