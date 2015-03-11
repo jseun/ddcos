@@ -58,18 +58,6 @@ format_disk()
   mkfs.ext4 -L persistence /dev/${disk}1
 }
 
-#build_iso_again()
-#{
-#	outdir=$1
-#	[ -e $outdir ] || mkdir -p $outdir
-#	isoname=$(cat /etc/version)
-#	xorriso -publisher "$(cat /etc/publisher)" -as mkisofs -l -J -R \
-#		-V "$(cat /etc/version)" -no-emul-boot -boot-load-size 4 \
-#		-boot-info-table -b isolinux/isolinux.bin -c isolinux/boot.cat \
-#		-isohybrid-mbr /lib/live/mount/persistence/sr0/isolinux/isohdpfx.bin \
-#		-o ${outdir}/${isoname}.iso /lib/live/mount/persistence/sr0
-#}
-
 mount_persistent_fs()
 {
   mkdir -p /mnt
@@ -144,7 +132,6 @@ do_install()
   mount_persistent_fs
   write_persistence_conf
   copy_live_to_disk
-  #build_iso_again "/mnt/boot"
   config_boot_loader
   write_boot_config
   umount_persistent_fs

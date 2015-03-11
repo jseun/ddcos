@@ -8,7 +8,7 @@ mkdir -p $destdir
 cp -v /scripts/install.sh $destdir
 
 copy_binary_to_rootfs $destdir whiptail lsblk udevadm \
-  fdisk xorriso mke2fs extlinux
+  fdisk mke2fs extlinux
 
 (cd ${destdir}/sbin; ln -sf mke2fs mkfs.ext4)
 
