@@ -25,9 +25,23 @@ cp -Pv /lib/${libdir}/libresolv.* $destlibdir
 cp -v /lib/${libdir}/ld-* $destlibdir
 
 # Binaries from klibc-utils
-for bin in cat dmesg false gunzip gzip ipconfig \
-  kill ln mv reboot sleep \
-  sync true uname zcat; do
+for bin in \
+  cat \
+  dmesg \
+  false \
+  gunzip \
+  gzip \
+  ipconfig \
+  kill \
+  ln \
+  mv \
+  reboot \
+  sleep \
+  sync \
+  true \
+  uname \
+  zcat\
+; do
   cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
 done
 
@@ -42,31 +56,25 @@ copy_binary_to_rootfs ${destdir} \
   chgrp \
   clear \
   cp \
-  date \
   dd \
   docker \
   echo \
   egrep \
-  env \
   find \
   grep \
   head \
-  hwclock \
   id \
   ifconfig \
-  insmod \
   ip \
   ip6tables \
   ip6tables-save \
   iptables \
   iptables-save \
   ls \
-  lsmod \
   mkdir \
   modprobe \
   mount \
   mountpoint \
-  ping \
   printf \
   ps \
   rm \

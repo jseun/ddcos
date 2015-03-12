@@ -7,9 +7,9 @@ destdir=${SQUASHFSDIR}/utils
 mkdir -p $destdir
 copy_binary_to_rootfs ${destdir} \
   cfdisk \
-  mke2fs \
   more \
   ldd \
+  ping \
   strace \
   vi
 
