@@ -22,7 +22,7 @@ if mountpoint -q "/var/lib/docker" && test -x /etc/init.d/docker; then
           /etc/init.d/docker stop
           /etc/init.d/mountdevsubfs.sh stop
           /etc/init.d/mountkernfs.sh stop
-          exec "$cmd"
+          $cmd
           ;;
         *) echo "Unknown command: $cmd"
           ;;
