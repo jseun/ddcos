@@ -9,6 +9,7 @@ copy_binary_to_rootfs ${destdir} \
   cfdisk \
   more \
   ldd \
+  lsmod \
   ping \
   strace \
   vi
