@@ -86,7 +86,8 @@ copy_binary_to_rootfs ${destdir} \
   test \
   touch \
   ulimit \
-  umount
+  umount \
+  xz
 
 (cd ${destdir}/bin; ln -sf bash sh)
 (cd ${destdir}; ln -sf /usr/bin/touch bin)
