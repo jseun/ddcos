@@ -4,8 +4,8 @@ source ./functions
 log_begin_msg
 
 destdir=${SQUASHFSDIR}/install
-mkdir -p $destdir
-cp -v /scripts/install.sh $destdir
+
+cp -v /lib/ddcos/install.sh $destdir/lib/ddcos
 
 copy_binary_to_rootfs $destdir \
   extlinux \

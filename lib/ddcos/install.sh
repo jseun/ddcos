@@ -103,6 +103,7 @@ TIMEOUT 50
 EOF
   allos=($(cd /mnt/boot; ls -d * | egrep -v syslinux))
   for os in ${allos[@]}; do
+    [ -d "/mnt/boot/$os" ] || continue
     kernel=$(basename /mnt/boot/$os/vmlinuz-*)
     initrd=$(basename /mnt/boot/$os/initrd.img-*)
     kernel_boot_params=$(cat /mnt/boot/$os/bootparams.txt)
@@ -112,7 +113,7 @@ LABEL $os
   MENU LABEL $os
   LINUX /boot/$os/$kernel
   INITRD /boot/$os/$initrd 
-  APPEND boot=live live-media-path=boot/$os ${kernel_boot_params}
+  APPEND boot=live live-media-path=boot/$os toram $kernel_boot_params
 
 EOF
   done

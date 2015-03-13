@@ -18,7 +18,7 @@ VOLUME ["/data"]
 ENV PUBLISHER github.com/jseun
 ENV DISTNAME ddcos
 ENV VERSION 8.0-1.0-dev
+ADD lib/ddcos/ /lib/ddcos/
 ADD scripts/run/ /scripts/run/
-ADD scripts/init.sh /scripts/
-ADD scripts/install.sh /scripts/
 ADD isolinux/ /tmp/isolinux
+ADD etc/systemd/system/ /etc/systemd/system/

@@ -4,55 +4,70 @@ source ./functions
 log_begin_msg
 
 destdir=${SQUASHFSROOTDIR}; mkdir -p $destdir
-cp -v /scripts/init.sh $destdir
 
-for dir in bin dev etc lib proc root run sbin sys tmp usr \
-  usr/lib usr/bin usr/sbin usr/share var var/run var/log var/lib; do
+# FIXME: Copy to /lib/ddcos/init.sh
+
+# Root filesystem hierarchy
+for dir in \
+  bin \
+  dev \
+  etc \
+  lib \
+  lib/ddcos \
+  proc \
+  root \
+  run \
+  sbin \
+  sys \
+  tmp \
+  usr \
+  usr/bin \
+  usr/lib \
+  usr/sbin \
+  var \
+  var/run \
+  var/log \
+  var/lib \
+; do
   mkdir -p ${destdir}/$dir
 done
 
-cp -vax /lib64 ${destdir}
-cp -v /lib/klibc-* ${destdir}/lib
-cp -vax /lib/{firmware,init,lsb,modules,terminfo,xtables} ${destdir}/lib
-
-libdir=$(uname -m)-linux-gnu
-destlibdir=${destdir}/lib/$libdir; mkdir -p $destlibdir
-cp -v /lib/${libdir}/libnsl-* $destlibdir
-cp -Pv /lib/${libdir}/libnsl.* $destlibdir
-cp -Pv /lib/${libdir}/libnss_* $destlibdir
-cp -v /lib/${libdir}/libresolv-* $destlibdir
-cp -Pv /lib/${libdir}/libresolv.* $destlibdir
-cp -v /lib/${libdir}/ld-* $destlibdir
-
-# Binaries from klibc-utils
-for bin in \
-  cat \
-  dmesg \
-  false \
-  gunzip \
-  gzip \
-  ipconfig \
-  kill \
-  ln \
-  mv \
-  reboot \
-  sleep \
-  sync \
-  true \
-  uname \
-  zcat\
+# System libraries
+for lib in \
+  /lib64 \
+  /lib/klibc-* \
+  /lib/firmware \
+  /lib/init \
+  /lib/lsb \
+  /lib/modules \
+  /lib/startpar \
+  /lib/systemd \
+  /lib/sysvinit \
+  /lib/terminfo \
+  /lib/udev \
+  /lib/$(uname -m)-linux-gnu \
+  /lib/xtables \
+  /usr/lib/systemd \
 ; do
-  cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
+  cp -vax $lib ${destdir}$(dirname $lib)
 done
+cp -v /lib/ddcos/init.sh $destdir/lib/ddcos
 
-cp -v /bin/live-* ${destdir}/bin
+# System binaries
+ln -sf /bin/bash ${destdir}/bin/sh
+ln -sf /bin/systemctl ${destdir}/sbin/telinit
+ln -sf /lib/systemd/systemd ${destdir}/bin
+ln -sf /lib/systemd/systemd ${destdir}/sbin/init
+ln -sf /lib/systemd/systemd-bus-proxyd ${destdir}/usr/bin/systemd-stdio-bridge
+ln -sf /lib/systemd/systemd-udevd ${destdir}/sbin/udevd
+ln -sf /usr/bin/touch ${destdir}/bin
+
 copy_binary_to_rootfs ${destdir} \
+  agetty \
   auplink \
   awk \
   basename \
   bash \
-  brctl \
-  bridge \
   chgrp \
   clear \
   cp \
@@ -82,32 +97,98 @@ copy_binary_to_rootfs ${destdir} \
   sed \
   start-stop-daemon \
   sysctl \
+  systemctl \
+  systemd-ask-password \
+  systemd-analyze \
+  systemd-cat \
+  systemd-cgls \
+  systemd-cgtop \
+  systemd-delta \
+  systemd-detect-virt \
+  systemd-escape \
+  systemd-inhibit \
+  systemd-machine-id-setup \
+  systemd-nspawn \
+  systemd-notify \
+  systemd-path \
+  systemd-run \
+  systemd-tmpfiles \
+  systemd-tty-ask-password-agent \
   tail \
   test \
   touch \
   ulimit \
+  umask \
   umount \
   xz
 
-(cd ${destdir}/bin; ln -sf bash sh)
-(cd ${destdir}; ln -sf /usr/bin/touch bin)
+# Binaries from klibc-utils
+for bin in \
+  cat \
+  dmesg \
+  false \
+  gunzip \
+  gzip \
+  ipconfig \
+  kill \
+  ln \
+  mv \
+  reboot \
+  sleep \
+  sync \
+  true \
+  uname \
+  zcat \
+; do
+  cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
+done
+
+# Scripts from live-boot
+cp -v /bin/live-* ${destdir}/bin
 
 # Configuration files
-printf 'DOCKER_OPTS="-s aufs --host tcp://0.0.0.0:2375 \
-  --host unix:///var/run/docker.sock"\n' >> /etc/default/docker
-groupadd docker
+printf '/lib/ddcos/docker-monitor.sh\n' >> /etc/shells
+#useradd -g docker -M -s /lib/ddcos/docker-monitor.sh docker
+useradd -g docker -d /var/run docker
+printf 'DOCKER_OPTS=" \
+  -s aufs \
+  --host tcp://0.0.0.0:2375 \
+  --host unix:///var/run/docker.sock \
+"\n' >> /etc/default/docker
 
-for conffile in fstab group gshadow hostname \
-  hosts ld.so.cache ld.so.conf localtime nsswitch.conf passwd protocols \
-  resolv.conf services shadow shells sysctl.conf; do
-  cp -v /etc/$conffile ${destdir}/etc
+for conf in \
+  default \
+  fstab \
+  group \
+  gshadow \
+  hostname \
+  hosts \
+  init \
+  init.d \
+  ld.so.cache \
+  ld.so.conf \
+  ld.so.conf.d \
+  localtime \
+  network \
+  nsswitch.conf \
+  passwd \
+  protocols \
+  rc.local \
+  resolv.conf \
+  security \
+  selinux \
+  services \
+  shadow \
+  shells \
+  ssl \
+  sysctl.conf \
+  sysctl.d \
+  systemd \
+; do
+  cp -vax /etc/$conf ${destdir}/etc
 done
 
-for confdir in default init.d iproute2 ld.so.conf.d \
-  network selinux security ssl sysctl.d; do
-  cp -vax /etc/$confdir ${destdir}/etc
-done
-
+touch ${destdir}/etc/resolv.conf
 echo $DISTVER > ${destdir}/etc/version
 echo $PUBLISHER > ${destdir}/etc/publisher
 
