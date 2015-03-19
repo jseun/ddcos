@@ -86,6 +86,7 @@ copy_binary_to_rootfs ${destdir} \
   ifdown \
   ifquery \
   ifup \
+  initctl \
   insserv \
   ip \
   ip6tables \
@@ -142,11 +143,9 @@ for bin in \
   false \
   gunzip \
   gzip \
-  ipconfig \
   kill \
   ln \
   mv \
-  reboot \
   sleep \
   sync \
   true \
@@ -154,6 +153,13 @@ for bin in \
   zcat \
 ; do
   cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
+done
+
+for bin in \
+  halt \
+  reboot \
+; do
+  cp -v /usr/lib/klibc/bin/$bin ${destdir}/sbin
 done
 
 # Configuration files
