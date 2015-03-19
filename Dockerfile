@@ -21,4 +21,4 @@ ENV VERSION 8.0-1.0-dev
 ADD lib/ddcos/ /lib/ddcos/
 ADD scripts/run/ /scripts/run/
 ADD isolinux/ /tmp/isolinux
-ADD etc/systemd/system/ /etc/systemd/system/
+#ADD etc/systemd/system/ /etc/systemd/system/

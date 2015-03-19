@@ -10,8 +10,6 @@ copy_binary_to_rootfs ${destdir} \
   more \
   ldd \
   lsmod \
-  ping \
-  strace \
-  vi
+  top \
 
 log_end_msg

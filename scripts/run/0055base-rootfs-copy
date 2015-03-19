@@ -5,8 +5,6 @@ log_begin_msg
 
 destdir=${SQUASHFSROOTDIR}; mkdir -p $destdir
 
-# FIXME: Copy to /lib/ddcos/init.sh
-
 # Root filesystem hierarchy
 for dir in \
   bin \
@@ -14,6 +12,7 @@ for dir in \
   etc \
   lib \
   lib/ddcos \
+  media \
   proc \
   root \
   run \
@@ -37,6 +36,7 @@ for lib in \
   /lib64 \
   /lib/klibc-* \
   /lib/firmware \
+  /lib/ifupdown \
   /lib/init \
   /lib/lsb \
   /lib/modules \
@@ -47,7 +47,10 @@ for lib in \
   /lib/udev \
   /lib/$(uname -m)-linux-gnu \
   /lib/xtables \
+  /usr/lib/binfmt.d \
+  /usr/lib/sysctl.d \
   /usr/lib/systemd \
+  /usr/lib/tmpfiles.d \
 ; do
   cp -vax $lib ${destdir}$(dirname $lib)
 done
@@ -76,15 +79,21 @@ copy_binary_to_rootfs ${destdir} \
   echo \
   egrep \
   find \
+  git \
   grep \
   head \
   id \
-  ifconfig \
+  ifdown \
+  ifquery \
+  ifup \
+  insserv \
   ip \
   ip6tables \
   ip6tables-save \
   iptables \
   iptables-save \
+  kmod \
+  login \
   ls \
   mkdir \
   modprobe \
@@ -92,8 +101,11 @@ copy_binary_to_rootfs ${destdir} \
   mountpoint \
   printf \
   ps \
+  pump \
+  readlink \
   rm \
   rmdir \
+  run-parts \
   sed \
   start-stop-daemon \
   sysctl \
@@ -117,6 +129,7 @@ copy_binary_to_rootfs ${destdir} \
   tail \
   test \
   touch \
+  udevadm \
   ulimit \
   umask \
   umount \
@@ -143,13 +156,7 @@ for bin in \
   cp -v /usr/lib/klibc/bin/$bin ${destdir}/bin
 done
 
-# Scripts from live-boot
-cp -v /bin/live-* ${destdir}/bin
-
 # Configuration files
-printf '/lib/ddcos/docker-monitor.sh\n' >> /etc/shells
-#useradd -g docker -M -s /lib/ddcos/docker-monitor.sh docker
-useradd -g docker -d /var/run docker
 printf 'DOCKER_OPTS=" \
   -s aufs \
   --host tcp://0.0.0.0:2375 \
@@ -165,16 +172,23 @@ for conf in \
   hosts \
   init \
   init.d \
+  insserv \
+  insserv.conf \
+  insserv.conf.d \
   ld.so.cache \
   ld.so.conf \
   ld.so.conf.d \
   localtime \
+  login.defs \
   network \
   nsswitch.conf \
+  pam.conf \
+  pam.d \
   passwd \
   protocols \
-  rc.local \
+  rc?.d \
   resolv.conf \
+  securetty \
   security \
   selinux \
   services \
@@ -184,6 +198,7 @@ for conf in \
   sysctl.conf \
   sysctl.d \
   systemd \
+  udev \
 ; do
   cp -vax /etc/$conf ${destdir}/etc
 done

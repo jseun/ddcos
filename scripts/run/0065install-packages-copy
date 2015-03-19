@@ -5,6 +5,7 @@ log_begin_msg
 
 destdir=${SQUASHFSDIR}/install
 
+mkdir -p $destdir/lib/ddcos
 cp -v /lib/ddcos/install.sh $destdir/lib/ddcos
 
 copy_binary_to_rootfs $destdir \
@@ -12,7 +13,6 @@ copy_binary_to_rootfs $destdir \
   fdisk \
   lsblk \
   mke2fs \
-  udevadm \
   whiptail
 
 (cd ${destdir}/sbin; ln -sf mke2fs mkfs.ext4)

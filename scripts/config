@@ -12,8 +12,9 @@ PKGS="\
   ca-certificates \
   lxc-docker \
   aufs-tools \
+  ifupdown \
+  pump \
   iptables \
-  bridge-utils \
   live-boot \
   linux-image-amd64 \
   firmware-linux-free \
@@ -23,9 +24,6 @@ PKGS="\
   xz-utils \
   git \
   sysvinit \
-\
-  vim-tiny \
-  strace \
 "
 export DISTVER BUILDPKGS PKGS
 
