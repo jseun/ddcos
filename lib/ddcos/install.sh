@@ -1,9 +1,19 @@
 #!/bin/bash
 
-LIVE_PATH=/lib/live/mount/persistence/sr0/live
+LIVE_PATH=/media/live
 DISTVER=$(cat /etc/version)
 usable_disks=()
 disk=
+
+mount_install_media()
+{
+  mount -t iso9660 /dev/disk/by-label/$DISTVER /media
+}
+
+umount_install_media()
+{
+  umount /media
+}
 
 is_mapper_device()
 {
@@ -133,6 +143,7 @@ config_boot_loader()
 
 do_install()
 {
+  mount_install_media
   find_usable_storage
   select_disk
   erase_disk || return 1
@@ -144,6 +155,7 @@ do_install()
   config_boot_loader
   write_boot_config
   umount_persistent_fs
+  umount_install_media
 }
 
 while true; do
@@ -159,7 +171,7 @@ while true; do
 
 	2*) /bin/bash --norc
 	;;
-	3*) reboot
+	3*) force-reboot
 	;;
 	esac
 

@@ -10,6 +10,7 @@ copy_binary_to_rootfs ${destdir} \
   more \
   ldd \
   lsmod \
+  lsof \
   top \
 
 log_end_msg

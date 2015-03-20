@@ -1,0 +1,18 @@
+#!/bin/bash
+
+source ./functions
+log_begin_msg
+
+rm /lib/systemd/system/systemd-logind.service
+rm /lib/systemd/system/multi-user.target.wants/systemd-logind.service
+
+printf '/lib/ddcos/docker-monitor.sh\n' >> /etc/shells
+useradd -g docker -d /tmp -s /lib/ddcos/docker-monitor.sh docker
+
+printf 'DOCKER_OPTS="%s %s %s"\n' \
+  "-s aufs" \
+  "--host tcp://0.0.0.0:2375" \
+  "--host unix:///var/run/docker.sock" \
+  >> /etc/default/docker
+
+log_end_msg

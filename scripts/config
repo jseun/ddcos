@@ -24,6 +24,8 @@ PKGS="\
   xz-utils \
   git \
   sysvinit \
+\
+  lsof \
 "
 export DISTVER BUILDPKGS PKGS
 

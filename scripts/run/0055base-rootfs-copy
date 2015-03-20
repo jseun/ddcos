@@ -54,11 +54,16 @@ for lib in \
 ; do
   cp -vax $lib ${destdir}$(dirname $lib)
 done
-cp -v /lib/ddcos/init.sh $destdir/lib/ddcos
+cp -v /lib/ddcos/{docker-monitor.sh,init.sh} $destdir/lib/ddcos
 
 # System binaries
 ln -sf /bin/bash ${destdir}/bin/sh
 ln -sf /bin/systemctl ${destdir}/sbin/telinit
+ln -sf /bin/systemctl ${destdir}/sbin/halt
+ln -sf /bin/systemctl ${destdir}/sbin/hibernate
+ln -sf /bin/systemctl ${destdir}/sbin/poweroff
+ln -sf /bin/systemctl ${destdir}/sbin/reboot
+ln -sf /bin/systemctl ${destdir}/sbin/suspend
 ln -sf /lib/systemd/systemd ${destdir}/bin
 ln -sf /lib/systemd/systemd ${destdir}/sbin/init
 ln -sf /lib/systemd/systemd-bus-proxyd ${destdir}/usr/bin/systemd-stdio-bridge
@@ -82,6 +87,7 @@ copy_binary_to_rootfs ${destdir} \
   git \
   grep \
   head \
+  hostname \
   id \
   ifdown \
   ifquery \
@@ -159,17 +165,12 @@ for bin in \
   halt \
   reboot \
 ; do
-  cp -v /usr/lib/klibc/bin/$bin ${destdir}/sbin
+  cp -v /usr/lib/klibc/bin/$bin ${destdir}/sbin/force-$bin
 done
 
 # Configuration files
-printf 'DOCKER_OPTS=" \
-  -s aufs \
-  --host tcp://0.0.0.0:2375 \
-  --host unix:///var/run/docker.sock \
-"\n' >> /etc/default/docker
-
 for conf in \
+  binfmt.d \
   default \
   fstab \
   group \
@@ -191,6 +192,8 @@ for conf in \
   pam.conf \
   pam.d \
   passwd \
+  pam.conf \
+  pam.d \
   protocols \
   rc?.d \
   resolv.conf \
@@ -204,6 +207,9 @@ for conf in \
   sysctl.conf \
   sysctl.d \
   systemd \
+  terminfo \
+  timezone \
+  tmpfiles.d \
   udev \
 ; do
   cp -vax /etc/$conf ${destdir}/etc
