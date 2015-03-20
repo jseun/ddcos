@@ -17,7 +17,7 @@ ENV DATADIR /data
 VOLUME ["/data"]
 ENV PUBLISHER github.com/jseun
 ENV DISTNAME ddcos
-ENV VERSION 8.0-1.0
+ENV VERSION 8.0-1.1-dev
 ADD etc/ /etc
 ADD lib/ /lib
 ADD scripts/run/ /scripts/run/
