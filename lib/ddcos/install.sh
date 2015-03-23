@@ -171,7 +171,7 @@ while true; do
 
 	2*) /bin/bash --norc
 	;;
-	3*) force-reboot
+	3*) ln -sf /sbin/force-reboot /sbin/reboot; reboot
 	;;
 	esac
 
