@@ -69,6 +69,7 @@ ln -sf /lib/systemd/systemd ${destdir}/sbin/init
 ln -sf /lib/systemd/systemd-bus-proxyd ${destdir}/usr/bin/systemd-stdio-bridge
 ln -sf /lib/systemd/systemd-udevd ${destdir}/sbin/udevd
 ln -sf /usr/bin/touch ${destdir}/bin
+ln -sf /sbin/udevadm ${destdir}/bin
 
 copy_binary_to_rootfs ${destdir} \
   agetty \
